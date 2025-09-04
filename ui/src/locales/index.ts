@@ -1,9 +1,9 @@
-import {useLocalStorage, usePreferredLanguages} from '@vueuse/core'
-import {computed} from 'vue'
-import {createI18n} from 'vue-i18n'
+import { useLocalStorage, usePreferredLanguages } from '@vueuse/core'
+import { computed } from 'vue'
+import { createI18n } from 'vue-i18n'
 
 // 导入语言文件
-const langModules = import.meta.glob('./lang/*/index.ts', {eager: true}) as Record<
+const langModules = import.meta.glob('./lang/*/index.ts', { eager: true }) as Record<
   string,
   () => Promise<{ default: object }>
 >
@@ -27,6 +27,8 @@ export function getBrowserLang() {
     defaultBrowserLang = 'zh-Hant'
   } else if (browserLang === 'zh-CN') {
     defaultBrowserLang = 'zh-CN'
+  } else if (browserLang === 'pt-BR' || browserLang === 'pt') {
+    defaultBrowserLang = 'pt-BR'
   } else {
     defaultBrowserLang = 'en-US'
   }
@@ -62,7 +64,7 @@ export const i18n = createI18n({
   locale: useLocalStorage(localeConfigKey, getBrowserLang()).value || getBrowserLang(),
   fallbackLocale: getBrowserLang(),
   messages: importMessages.value,
-  globalInjection: true
+  globalInjection: true,
 })
 
 export const langList = computed(() => {
@@ -72,13 +74,13 @@ export const langList = computed(() => {
   langModuleMap.forEach((value: any, key) => {
     list.push({
       label: value.default.lang,
-      value: key
+      value: key,
     })
   })
 
   return list
 })
 
-export const {t} = i18n.global
+export const { t } = i18n.global
 
 export default i18n

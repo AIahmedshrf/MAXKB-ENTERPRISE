@@ -878,7 +878,7 @@ class SwitchLanguageSerializer(serializers.Serializer):
     def switch(self):
         self.is_valid(raise_exception=True)
         language = self.data.get('language')
-        support_language_list = ['zh-CN', 'zh-Hant', 'en-US']
+        support_language_list = ['zh-CN', 'zh-Hant', 'en-US', 'pt-BR']
         if not support_language_list.__contains__(language):
             raise AppApiException(500, _('language only support:') + ','.join(support_language_list))
         QuerySet(User).filter(id=self.data.get('user_id')).update(language=language)

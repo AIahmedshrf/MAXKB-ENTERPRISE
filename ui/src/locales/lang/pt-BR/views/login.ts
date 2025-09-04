@@ -1,0 +1,61 @@
+export default {
+  title: 'Login',
+  loginForm: {
+    username: {
+      label: 'Nome de Usuário',
+      placeholder: 'Por favor, insira o nome de usuário',
+      requiredMessage: 'Por favor, insira o nome de usuário',
+      lengthMessage: 'O comprimento deve ter entre 4 e 20 caracteres',
+    },
+    password: {
+      label: 'Senha de Login',
+      placeholder: 'Por favor, insira a senha',
+      requiredMessage: 'Por favor, insira a senha',
+      lengthMessage: 'O comprimento deve ter entre 6 e 20 caracteres',
+    },
+    captcha: {
+      label: 'Código de Verificação',
+      placeholder: 'Por favor, insira o código de verificação',
+      requiredMessage: 'Por favor, insira o código de verificação',
+      validatorMessage: 'Código de verificação incorreto',
+    },
+    new_password: {
+      label: 'Nova Senha',
+      placeholder: 'Por favor, insira a nova senha',
+      requiredMessage: 'Por favor, insira a nova senha',
+    },
+    re_password: {
+      label: 'Confirmar Senha',
+      placeholder: 'Por favor, confirme a senha',
+      requiredMessage: 'Por favor, confirme a senha',
+      validatorMessage: 'As senhas não coincidem',
+    },
+    email: {
+      label: 'E-mail',
+      placeholder: 'Por favor, insira o e-mail',
+      requiredMessage: 'Por favor, insira o e-mail',
+      validatorEmail: 'Por favor, insira um formato de e-mail válido!',
+    },
+  },
+  jump_tip: 'Você será redirecionado para a página de origem de autenticação para autenticação',
+  jump: 'Redirecionar',
+  resetPassword: 'Alterar Senha',
+  forgotPassword: 'Esqueceu a Senha',
+  userRegister: 'Cadastro de Usuário',
+  buttons: {
+    login: 'Entrar',
+    register: 'Cadastrar',
+    backLogin: 'Voltar ao Login',
+    checkCode: 'Verificar Agora',
+  },
+  newPassword: 'Nova Senha',
+  enterPassword: 'Por favor, insira sua nova senha',
+  useEmail: 'Usar E-mail',
+  moreMethod: 'Mais Métodos de Login',
+  verificationCode: {
+    placeholder: 'Por favor, insira o código de verificação',
+    getVerificationCode: 'Obter Código de Verificação',
+    successMessage: 'Código de verificação enviado com sucesso',
+    resend: 'Reenviar',
+  },
+}

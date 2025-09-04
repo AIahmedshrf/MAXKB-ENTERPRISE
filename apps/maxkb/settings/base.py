@@ -172,6 +172,7 @@ USE_TZ = True
 LANGUAGES = [
     ('en', 'English'),
     ('zh', '中文简体'),
+    ('pt-br', 'Português (Brasil)'),
     ('zh-hant', '中文繁体')
 ]
 # 翻译文件路径
