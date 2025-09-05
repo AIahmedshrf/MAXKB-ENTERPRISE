@@ -1,5 +1,8 @@
 import { baseNodes } from '@/workflow/common/data'
-export const applicationTemplate: any = {
+import { t } from '@/locales'
+
+// Function to create templates with current language translations
+export const getApplicationTemplate = () => ({
   blank: {
     edges: [],
     nodes: baseNodes,
@@ -15,17 +18,16 @@ export const applicationTemplate: any = {
           config: {},
           height: 734.766,
           showNode: true,
-          stepName: '基本信息',
+          stepName: t('views.applicationWorkflow.nodes.baseNode.label'),
           node_data: {
             desc: '模板',
-            name: '知识库问答助手',
-            prologue:
-              '您好，我是 XXX 小助手，您可以向我提出 XXX 使用问题。\n- XXX 主要功能有什么？\n- XXX 如何收费？\n- 需要转人工服务',
+            name: t('views.application.templates.assistant.name'),
+            prologue: t('views.application.templates.assistant.prologue'),
             tts_type: 'BROWSER',
           },
           input_field_list: [],
           user_input_config: {
-            title: '用户输入',
+            title: t('views.applicationWorkflow.userInput'),
           },
           api_input_field_list: [],
           user_input_field_list: [],
@@ -40,21 +42,21 @@ export const applicationTemplate: any = {
           config: {
             fields: [
               {
-                label: '用户问题',
+                label: t('views.applicationWorkflow.nodes.startNode.question'),
                 value: 'question',
               },
             ],
             globalFields: [
               {
-                label: '当前时间',
+                label: t('views.applicationWorkflow.nodes.startNode.currentTime'),
                 value: 'time',
               },
               {
-                label: '历史聊天记录',
+                label: t('views.application.form.historyRecord.label'),
                 value: 'history_context',
               },
               {
-                label: '对话 ID',
+                label: t('chat.chatId'),
                 value: 'chat_id',
               },
             ],
@@ -67,7 +69,7 @@ export const applicationTemplate: any = {
           ],
           height: 364,
           showNode: true,
-          stepName: '开始',
+          stepName: t('views.applicationWorkflow.nodes.startNode.label'),
           globalFields: [
             {
               label: '当前时间',
@@ -85,26 +87,28 @@ export const applicationTemplate: any = {
           config: {
             fields: [
               {
-                label: '检索结果的分段列表',
+                label: t('views.applicationWorkflow.nodes.searchKnowledgeNode.paragraph_list'),
                 value: 'paragraph_list',
               },
               {
-                label: '满足直接回答的分段列表',
+                label: t(
+                  'views.applicationWorkflow.nodes.searchKnowledgeNode.is_hit_handling_method_list',
+                ),
                 value: 'is_hit_handling_method_list',
               },
               {
-                label: '检索结果',
+                label: t('views.applicationWorkflow.nodes.searchKnowledgeNode.result'),
                 value: 'data',
               },
               {
-                label: '满足直接回答的分段内容',
+                label: t('views.applicationWorkflow.nodes.searchKnowledgeNode.directly_return'),
                 value: 'directly_return',
               },
             ],
           },
           height: 794,
           showNode: true,
-          stepName: '知识库检索',
+          stepName: t('views.applicationWorkflow.nodes.searchKnowledgeNode.label'),
           condition: 'AND',
           node_data: {
             knowledge_id_list: [],
@@ -130,14 +134,14 @@ export const applicationTemplate: any = {
           config: {
             fields: [
               {
-                label: '分支名称',
+                label: t('views.applicationWorkflow.nodes.conditionNode.branch_name'),
                 value: 'branch_name',
               },
             ],
           },
           height: 544.148,
           showNode: true,
-          stepName: '判断器',
+          stepName: t('views.applicationWorkflow.nodes.conditionNode.label'),
           condition: 'AND',
           node_data: {
             branch: [
@@ -201,14 +205,14 @@ export const applicationTemplate: any = {
           config: {
             fields: [
               {
-                label: '内容',
+                label: t('views.applicationWorkflow.nodes.replyNode.content'),
                 value: 'answer',
               },
             ],
           },
           height: 386,
           showNode: true,
-          stepName: '指定回复',
+          stepName: t('views.applicationWorkflow.nodes.replyNode.label'),
           condition: 'AND',
           node_data: {
             fields: ['fd0324fc-f5e4-4fa6-a2d9-cb251b467605', 'directly_return'],
@@ -227,21 +231,21 @@ export const applicationTemplate: any = {
           config: {
             fields: [
               {
-                label: 'AI 回答内容',
+                label: t('views.applicationWorkflow.nodes.aiChatNode.answer'),
                 value: 'answer',
               },
               {
-                label: '思考过程',
+                label: t('views.applicationWorkflow.nodes.aiChatNode.think'),
                 value: 'reasoning_content',
               },
             ],
           },
           height: 993.383,
           showNode: true,
-          stepName: 'AI 对话',
+          stepName: t('views.applicationWorkflow.nodes.aiChatNode.label'),
           condition: 'AND',
           node_data: {
-            prompt: '已知信息：\n{{知识库检索.data}}\n问题：\n{{开始.question}}',
+            prompt: t('views.applicationWorkflow.nodes.aiChatNode.defaultPrompt'),
             system: '',
             model_id: '',
             is_result: true,
@@ -273,11 +277,11 @@ export const applicationTemplate: any = {
           },
           height: 504,
           showNode: true,
-          stepName: '指定回复1',
+          stepName: t('views.applicationWorkflow.nodes.replyNode.label') + '1',
           condition: 'AND',
           node_data: {
             fields: [],
-            content: '抱歉，没有在知识库查询到相关内容，请提供更详细的信息。',
+            content: t('views.applicationWorkflow.nodes.replyNode.noResultContent'),
             is_result: true,
             reply_type: 'content',
           },
@@ -462,4 +466,7 @@ export const applicationTemplate: any = {
       },
     ],
   },
-}
+})
+
+// Export for backward compatibility
+export const applicationTemplate = getApplicationTemplate()
