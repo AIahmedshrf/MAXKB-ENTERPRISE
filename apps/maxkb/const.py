@@ -13,9 +13,8 @@ PROJECT_DIR = os.path.dirname(BASE_DIR)
 
 # Development path configuration
 if os.environ.get('MAXKB_DEV_MODE') == 'true':
-    # Use local development directories with absolute path
-    DEV_BASE = '/Users/user0/Documents/IDEs/vscode/projetos-llm/MaxKB-br/opt/maxkb'
-    LOG_DIR = os.path.join(DEV_BASE, 'logs')
+    # Use local development directories relative to project
+    LOG_DIR = os.path.join(PROJECT_DIR, 'data', 'logs')
 else:
     # Production path
     LOG_DIR = os.path.join('/', 'opt', 'maxkb', 'logs')
