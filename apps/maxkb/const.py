@@ -6,18 +6,11 @@ from dotenv import load_dotenv
 
 from .conf import ConfigManager
 
-__all__ = ['BASE_DIR', 'PROJECT_DIR', 'VERSION', 'CONFIG', 'LOG_DIR']
+__all__ = ['BASE_DIR', 'PROJECT_DIR', 'VERSION', 'CONFIG']
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
 
-# Development path configuration
-if os.environ.get('MAXKB_DEV_MODE') == 'true':
-    # Use local development directories relative to project
-    LOG_DIR = os.path.join(PROJECT_DIR, 'data', 'logs')
-else:
-    # Production path
-    LOG_DIR = os.path.join('/', 'opt', 'maxkb', 'logs')
 VERSION = '2.0.0'
 
 # load environment variables from .env file
