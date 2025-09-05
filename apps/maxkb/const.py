@@ -13,8 +13,8 @@ PROJECT_DIR = os.path.dirname(BASE_DIR)
 
 # Development path configuration
 if os.environ.get('MAXKB_DEV_MODE') == 'true':
-    # Use local development directories
-    DEV_BASE = os.path.join(PROJECT_DIR, '..', 'opt', 'maxkb')
+    # Use local development directories with absolute path
+    DEV_BASE = '/Users/user0/Documents/IDEs/vscode/projetos-llm/MaxKB-br/opt/maxkb'
     LOG_DIR = os.path.join(DEV_BASE, 'logs')
 else:
     # Production path
@@ -27,8 +27,8 @@ load_dotenv()
 if os.getenv('MAXKB_CONFIG') is not None:
     CONFIG = ConfigManager.load_user_config(root_path=PROJECT_DIR)
 elif os.environ.get('MAXKB_DEV_MODE') == 'true':
-    # Use local development config
-    DEV_CONF = os.path.join(PROJECT_DIR, '..', 'opt', 'maxkb', 'conf')
+    # Use local development config with absolute path
+    DEV_CONF = '/Users/user0/Documents/IDEs/vscode/projetos-llm/MaxKB-br/opt/maxkb/conf'
     CONFIG = ConfigManager.load_user_config(root_path=DEV_CONF)
 else:
     CONFIG = ConfigManager.load_user_config(root_path=os.path.abspath('/opt/maxkb/conf'))
