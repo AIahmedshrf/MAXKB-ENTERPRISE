@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 from .conf import ConfigManager
 
-__all__ = ['BASE_DIR', 'PROJECT_DIR', 'VERSION', 'CONFIG']
+__all__ = ['BASE_DIR', 'PROJECT_DIR', 'VERSION', 'CONFIG', 'LOG_DIR']
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
