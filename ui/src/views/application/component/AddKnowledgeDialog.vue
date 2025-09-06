@@ -42,7 +42,7 @@
       </template>
       <div class="layout-bg">
         <div class="flex-between p-16 ml-8">
-          <h4>{{ currentFolder?.name }}</h4>
+          <h4>{{ currentFolderName }}</h4>
           <el-input
             v-model="searchValue"
             :placeholder="$t('common.search')"
