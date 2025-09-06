@@ -3,9 +3,10 @@
 from rest_framework import serializers
 
 from tools.models import ToolFolder
+from apps.common.utils.translation_mixin import FolderTranslationMixin
 
 
-class ToolFolderTreeSerializer(serializers.ModelSerializer):
+class ToolFolderTreeSerializer(FolderTranslationMixin, serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
 
     class Meta:
