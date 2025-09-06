@@ -48,6 +48,7 @@ export default {
   result: 'Result',
   remove: 'Remove',
   removeSuccess: 'Successful',
+  rootDirectory: 'Root',
   searchBar: {
     placeholder: 'Search by name',
   },
