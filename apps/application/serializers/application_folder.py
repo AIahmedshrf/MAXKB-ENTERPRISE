@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
 from application.models import ApplicationFolder
+from apps.common.utils.translation_mixin import FolderTranslationMixin
 
 
-class ApplicationFolderTreeSerializer(serializers.ModelSerializer):
+class ApplicationFolderTreeSerializer(FolderTranslationMixin, serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
 
     class Meta:
