@@ -17,7 +17,7 @@ class ToolFolderTreeSerializer(FolderTranslationMixin, serializers.ModelSerializ
         return ToolFolderTreeSerializer(obj.get_children(), many=True).data
 
 
-class ToolFolderFlatSerializer(serializers.ModelSerializer):
+class ToolFolderFlatSerializer(FolderTranslationMixin, serializers.ModelSerializer):
     """只序列化当前层的文件夹，不包含子节点"""
 
     class Meta:
