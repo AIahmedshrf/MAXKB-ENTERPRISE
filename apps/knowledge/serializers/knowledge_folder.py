@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
 from knowledge.models import KnowledgeFolder
+from apps.common.utils.translation_mixin import FolderTranslationMixin
 
 
-class KnowledgeFolderTreeSerializer(serializers.ModelSerializer):
+class KnowledgeFolderTreeSerializer(FolderTranslationMixin, serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
 
     class Meta:
