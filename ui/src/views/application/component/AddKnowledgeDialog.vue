@@ -105,6 +105,8 @@ import { useRoute } from 'vue-router'
 import useStore from '@/stores'
 import { loadSharedApi } from '@/utils/dynamics-api/shared-api'
 import { uniqueArray } from '@/utils/array'
+import { useBackendTranslation } from '@/composables/useBackendTranslation'
+
 const route = useRoute()
 const props = defineProps({
   data: {
