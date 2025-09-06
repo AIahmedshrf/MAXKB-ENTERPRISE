@@ -109,10 +109,13 @@ import useStore from '@/stores'
 import { loadSharedApi } from '@/utils/dynamics-api/shared-api'
 import { uniqueArray } from '@/utils/array'
 import { resetUrl } from '@/utils/common'
+import { useBackendTranslation } from '@/composables/useBackendTranslation'
+
 const route = useRoute()
 
 const emit = defineEmits(['refresh'])
 const { folder, user } = useStore()
+const { isRootDirectory, getRootDirectoryName } = useBackendTranslation()
 const apiType = computed(() => {
   if (route.path.includes('shared')) {
     return 'systemShare'
