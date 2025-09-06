@@ -2,6 +2,8 @@ import { Result } from '@/request/Result'
 import { get, put, post, del } from '@/request/index'
 import type { Ref } from 'vue'
 import type { pageRequest } from '@/api/type/common'
+import i18n from '@/locales'
+
 const prefix = '/workspace'
 
 /**
