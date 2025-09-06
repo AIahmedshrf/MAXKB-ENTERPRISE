@@ -261,7 +261,7 @@ const submitHandle = async (formEl: FormInstance | undefined) => {
 function selectedType(type: string) {
   appTemplate.value = type
   const templates = getApplicationTemplate()
-  workflowDefault.value = templates[type]
+  workflowDefault.value = templates[type as keyof typeof templates]
 }
 
 defineExpose({ open })
