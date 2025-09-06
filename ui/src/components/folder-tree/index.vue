@@ -253,7 +253,7 @@ function deleteFolder(row: Tree) {
     .then(() => {
       folderApi.delFolder(row.id as string, props.source, loading).then(() => {
         treeRef.value?.setCurrentKey(row.parent_id || 'default')
-        const prevFolder = TreeToFlatten(props.data).find((item: any) => item.id === row.parent_id)
+        const prevFolder = TreeToFlatten(translatedData.value).find((item: any) => item.id === row.parent_id)
         folder.setCurrentFolder(prevFolder)
         emit('refreshTree')
       })
