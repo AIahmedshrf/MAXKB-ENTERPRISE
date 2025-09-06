@@ -15,7 +15,7 @@ class ApplicationFolderTreeSerializer(FolderTranslationMixin, serializers.ModelS
         return ApplicationFolderTreeSerializer(obj.get_children(), many=True).data
 
 
-class ApplicationFolderFlatSerializer(serializers.ModelSerializer):
+class ApplicationFolderFlatSerializer(FolderTranslationMixin, serializers.ModelSerializer):
     class Meta:
         model = ApplicationFolder
         fields = ['id', 'name', 'desc', 'user_id', 'workspace_id', 'parent_id']
