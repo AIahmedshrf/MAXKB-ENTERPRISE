@@ -49,6 +49,7 @@ export default {
   result: '结果',
   remove: '移除',
   removeSuccess: '移除成功',
+  rootDirectory: '根目录',
   searchBar: {
     placeholder: '按名称搜索',
   },
