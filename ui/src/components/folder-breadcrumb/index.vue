@@ -1,10 +1,10 @@
 <template>
-  <h2 v-if="breadcrumbData?.length === 1" class="ellipsis" :title="breadcrumbData[0]?.name">
-    {{ breadcrumbData[0]?.name }}
+  <h2 v-if="translatedBreadcrumb?.length === 1" class="ellipsis" :title="translatedBreadcrumb[0]?.name">
+    {{ translatedBreadcrumb[0]?.name }}
   </h2>
   <el-breadcrumb separator-icon="ArrowRight" style="line-height: normal" class="mt-4" v-else>
-    <el-breadcrumb-item v-for="(item, index) in breadcrumbData" :key="index">
-      <h5 class="ml-4 ellipsis" v-if="index === breadcrumbData.length - 1" :title="item.name">
+    <el-breadcrumb-item v-for="(item, index) in translatedBreadcrumb" :key="index">
+      <h5 class="ml-4 ellipsis" v-if="index === translatedBreadcrumb.length - 1" :title="item.name">
         {{ item.name }}
       </h5>
       <el-button v-else link @click="handleClick(item)" :title="item.name">
@@ -17,9 +17,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { TreeToFlatten } from '@/utils/array'
+import { useBackendTranslation } from '@/composables/useBackendTranslation'
 defineOptions({ name: 'FolderBreadcrumb' })
 import useStore from '@/stores'
 const { folder, user } = useStore()
+
+const { translateData } = useBackendTranslation()
 
 const props = defineProps({
   folderList: {
@@ -30,6 +33,12 @@ const props = defineProps({
 
 const breadcrumbData = computed(() => {
   return folder.currentFolder?.id && getBreadcrumbData()
+})
+
+// Computed property para traduzir o breadcrumb dinamicamente
+const translatedBreadcrumb = computed(() => {
+  if (!breadcrumbData.value) return []
+  return translateData(breadcrumbData.value)
 })
 
 const emit = defineEmits(['click'])
