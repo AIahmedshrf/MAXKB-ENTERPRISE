@@ -26,7 +26,7 @@
       <el-scrollbar>
         <el-tree
           ref="treeRef"
-          :data="data"
+          :data="translatedData"
           :props="defaultProps"
           @node-click="handleNodeClick"
           :filter-node-method="filterNode"
