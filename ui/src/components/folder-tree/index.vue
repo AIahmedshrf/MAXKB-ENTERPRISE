@@ -170,6 +170,8 @@ const MoreFilledPermission = (node: any) => {
 }
 
 const { folder } = useStore()
+const { isRootDirectory, getRootDirectoryName } = useBackendTranslation()
+
 onBeforeRouteLeave((to, from) => {
   folder.setCurrentFolder({})
 })
@@ -181,6 +183,20 @@ interface Tree {
   show?: boolean
   parent_id?: string
 }
+
+// Helper function to translate folder names in tree data
+const translateTreeData = (data: any[]): any[] => {
+  return data.map(item => ({
+    ...item,
+    name: isRootDirectory(item.name) ? getRootDirectoryName() : item.name,
+    children: item.children ? translateTreeData(item.children) : undefined
+  }))
+}
+
+// Computed property for translated data
+const translatedData = computed(() => {
+  return translateTreeData(props.data as any[])
+})
 
 const defaultProps = {
   children: 'children',
