@@ -110,6 +110,7 @@ import useStore from '@/stores'
 import { TreeToFlatten } from '@/utils/array'
 import { MsgConfirm } from '@/utils/message'
 import permissionMap from '@/permission'
+import { useBackendTranslation } from '@/composables/useBackendTranslation'
 
 defineOptions({ name: 'FolderTree' })
 const props = defineProps({
