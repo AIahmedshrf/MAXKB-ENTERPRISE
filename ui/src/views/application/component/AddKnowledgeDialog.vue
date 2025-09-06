@@ -118,6 +118,8 @@ const props = defineProps({
 
 const emit = defineEmits(['addData'])
 const { folder, user } = useStore()
+const { isRootDirectory, getRootDirectoryName } = useBackendTranslation()
+
 const apiType = computed(() => {
   if (route.path.includes('shared')) {
     return 'systemShare'
