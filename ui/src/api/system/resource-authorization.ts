@@ -87,7 +87,7 @@ const getSystemFolder: (
       Result.success([
         {
           id: 'default',
-          name: '根目录',
+          name: i18n.global.t('common.rootDirectory'),
           desc: null,
           parent_id: null,
           children: [],
