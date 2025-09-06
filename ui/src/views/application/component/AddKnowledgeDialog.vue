@@ -207,6 +207,15 @@ const refresh = () => {
 const folderList = ref<any[]>([])
 const currentFolder = ref<any>({})
 const folderLoading = ref(false)
+
+// Computed property for translated folder name
+const currentFolderName = computed(() => {
+  if (!currentFolder.value?.name) return ''
+  return isRootDirectory(currentFolder.value.name) 
+    ? getRootDirectoryName() 
+    : currentFolder.value.name
+})
+
 // 文件
 function folderClickHandle(row: any) {
   if (row.id === currentFolder.value?.id) {
