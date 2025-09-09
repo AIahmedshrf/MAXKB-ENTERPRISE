@@ -13,8 +13,9 @@ import uuid
 from functools import reduce
 from io import BytesIO
 from typing import Dict
-import pytz
+
 import openpyxl
+import pytz
 from django.core import validators
 from django.core.cache import caches
 from django.db import transaction, models
@@ -34,7 +35,7 @@ from application.serializers.application_serializers import ModelDatasetAssociat
 from application.serializers.chat_message_serializers import ChatInfo
 from common.constants.permission_constants import RoleConstants
 from common.db.search import native_search, native_page_search, page_search, get_dynamics_model
-from common.exception.app_exception import AppApiException
+from common.exception.app_exception import AppApiException, AppUnauthorizedFailed
 from common.util.common import post
 from common.util.field_message import ErrMessage
 from common.util.file_util import get_file_content
@@ -483,6 +484,13 @@ class ChatRecordSerializer(serializers.Serializer):
         application_id = serializers.UUIDField(required=True)
         chat_id = serializers.UUIDField(required=True)
         order_asc = serializers.BooleanField(required=False, allow_null=True)
+
+        def is_valid(self, *, raise_exception=False):
+            super().is_valid(raise_exception=True)
+            exist = QuerySet(Chat).filter(id=self.data.get("chat_id"),
+                                          application_id=self.data.get("application_id")).exists()
+            if not exist:
+                raise AppUnauthorizedFailed(403, _('No permission to access'))
 
         def list(self, with_valid=True):
             if with_valid:
