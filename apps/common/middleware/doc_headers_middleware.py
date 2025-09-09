@@ -9,43 +9,102 @@
 from django.http import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
 
+from common.auth import handles, TokenDetails
+
 content = """
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script>
-      window.onload = () => {
-        var xhr = new XMLHttpRequest()
-        xhr.open('GET', '/api/user', true)
-
-        xhr.setRequestHeader('Content-Type', 'application/json')
-        const token = localStorage.getItem('token')
-        const pathname = window.location.pathname
-        if (token) {
-          xhr.setRequestHeader('Authorization', token)
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                window.location.href = pathname
-              }
-              if (xhr.status === 401) {
-                window.location.href = '/ui/login'
-              }
-            }
-          }
-
-          xhr.send()
-        } else {
-          window.location.href = '/ui/login'
-        }
-      }
-    </script>
   </head>
-  <body></body>
+  <style>
+    /* 弹框内容样式 */
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto; /* 15% 从顶部和自动水平居中 */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%; /* 宽度 */
+    }
+  </style>
+  <body>
+    <div class="modal-content">
+      <input type="text" id="auth-input" />
+      <button id="auth">认证</button>
+      <button id="goLogin">去登录</button>
+    </div>
+    <script>
+      const setCookie = (name, value, days) => {
+        var expires = "";
+        if (days) {
+          var date = new Date();
+          date.setTime(date.getTime() + days * 2);
+          expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+      };
+      const authToken = (token) => {
+        return new Promise((resolve, reject) => {
+          try {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/api/user", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            const pathname = window.location.pathname;
+            if (token) {
+              xhr.setRequestHeader("Authorization", token);
+              xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                  if (xhr.status === 200) {
+                    resolve(true);
+                  } else {
+                    reject(true);
+                  }
+                }
+              };
+
+              xhr.send();
+            }
+          } catch (e) {
+            reject(false);
+          }
+        });
+      };
+      window.onload = () => {
+        const token = localStorage.getItem("token");
+        authToken(token)
+          .then(() => {
+            setCookie("Authorization",  token);
+            window.location.href = window.location.pathname;
+          })
+          .catch((e) => {});
+      };
+      // 获取元素
+      const auth = document.getElementById("auth");
+      const goLogin = document.getElementById("goLogin");
+
+      // 打开弹框函数
+      auth.onclick = ()=> {
+        const authInput = document.getElementById("auth-input");
+        const token = authInput.value
+        authToken(token)
+          .then(() => {
+            setCookie("Authorization", token);
+            window.location.href = window.location.pathname;
+          })
+          .catch((e) => {
+            alert("令牌错误");
+          });
+      };
+
+      // 去系统的登录页面
+      goLogin.onclick =  ()=> {
+        window.location.href = "/ui/login";
+      };
+    </script>
+  </body>
 </html>
 
 """
@@ -54,9 +113,18 @@ content = """
 class DocHeadersMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         if request.path.startswith('/doc/') or request.path.startswith('/doc/chat/'):
-            HTTP_REFERER = request.META.get('HTTP_REFERER')
-            if HTTP_REFERER is None:
+            auth = request.COOKIES.get('Authorization')
+            if auth is None:
                 return HttpResponse(content)
-            if HTTP_REFERER == request._current_scheme_host + request.path:
-                return response
+            else:
+                try:
+                    token = auth
+                    token_details = TokenDetails(token)
+                    for handle in handles:
+                        if handle.support(request, token, token_details.get_token_details):
+                            handle.handle(request, token, token_details.get_token_details)
+                            return response
+                    return HttpResponse(content)
+                except Exception as e:
+                    return HttpResponse(content)
         return response
