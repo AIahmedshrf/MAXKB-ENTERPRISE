@@ -1,7 +1,7 @@
 export enum SearchMode {
   embedding = 'views.application.dialog.vectorSearch',
   keywords = 'views.application.dialog.fullTextSearch',
-  blend = 'views.application.dialog.hybridSearch'
+  blend = 'views.application.dialog.hybridSearch',
 }
 
 export enum WorkflowType {
@@ -24,4 +24,13 @@ export enum WorkflowType {
   SpeechToTextNode = 'speech-to-text-node',
   ImageGenerateNode = 'image-generate-node',
   McpNode = 'mcp-node',
+  LoopNode = 'loop-node',
+  LoopBodyNode = 'loop-body-node',
+  LoopStartNode = 'loop-start-node',
+}
+export enum WorkflowMode {
+  // 应用工作流
+  Application = 'application',
+  // 应用工作流循环
+  ApplicationLoop = 'application-loop',
 }

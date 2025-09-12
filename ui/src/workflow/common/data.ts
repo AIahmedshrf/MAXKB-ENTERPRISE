@@ -1,4 +1,4 @@
-import { WorkflowType } from '@/enums/application'
+import { WorkflowType, WorkflowMode } from '@/enums/application'
 import { t } from '@/locales'
 
 export const startNode = {
@@ -360,7 +360,113 @@ export const toolNode = {
     },
   },
 }
+export const loopStartNode = {
+  id: WorkflowType.LoopStartNode,
+  type: WorkflowType.LoopStartNode,
+  x: 480,
+  y: 3340,
+  properties: {
+    height: 364,
+    stepName: t('views.applicationWorkflow.nodes.loopStartNode.label', '循环开始'),
+    config: {
+      fields: [
+        {
+          label: t('views.applicationWorkflow.nodes.startNode.index', '下标'),
+          value: 'index',
+        },
+        {
+          label: t('views.applicationWorkflow.nodes.startNode.item', '循环元素'),
+          value: 'item',
+        },
+      ],
+      globalFields: [],
+    },
+    showNode: true,
+  },
+}
+
+export const loopNode = {
+  type: WorkflowType.LoopNode,
+  visible: false,
+  text: t('views.applicationWorkflow.nodes.loopNode.text', '循环节点'),
+  label: t('views.applicationWorkflow.nodes.loopNode.label', '循环节点'),
+  height: 252,
+  properties: {
+    stepName: t('views.applicationWorkflow.nodes.loopNode.label', '循环节点'),
+    workflow: {
+      edges: [],
+      nodes: [
+        {
+          x: 480,
+          y: 3340,
+          id: 'loop-start-node',
+          type: 'loop-start-node',
+          properties: {
+            config: {
+              fields: [],
+              globalFields: [],
+            },
+            fields: [],
+            height: 361.333,
+            showNode: true,
+            stepName: '开始',
+            globalFields: [],
+          },
+        },
+      ],
+    },
+    config: {
+      fields: [
+        {
+          label: t('loop.item', '循环参数'),
+          value: 'item',
+        },
+        {
+          label: t('common.result'),
+          value: 'result',
+        },
+      ],
+    },
+  },
+}
+
+export const loopBodyNode = {
+  type: WorkflowType.LoopBodyNode,
+  text: t('views.applicationWorkflow.nodes.loopBodyNode.text', '循环体'),
+  label: t('views.applicationWorkflow.nodes.loopBodyNode.label', '循环体'),
+  height: 600,
+  properties: {
+    width: 1800,
+    stepName: t('views.applicationWorkflow.nodes.loopBodyNode.label', '循环体'),
+    config: {
+      fields: [],
+    },
+  },
+}
+
 export const menuNodes = [
+  {
+    label: t('views.applicationWorkflow.nodes.classify.aiCapability'),
+    list: [
+      aiChatNode,
+      questionNode,
+      imageGenerateNode,
+      imageUnderstandNode,
+      textToSpeechNode,
+      speechToTextNode,
+    ],
+  },
+  { label: t('views.knowledge.title'), list: [searchKnowledgeNode, rerankerNode] },
+  {
+    label: t('views.applicationWorkflow.nodes.classify.businessLogic'),
+    list: [loopNode, conditionNode, formNode, variableAssignNode, replyNode],
+  },
+  {
+    label: t('views.applicationWorkflow.nodes.classify.other'),
+    list: [mcpNode, documentExtractNode, toolNode],
+  },
+]
+export const applicationLoopMenuNodes = [
   {
     label: t('views.applicationWorkflow.nodes.classify.aiCapability'),
     list: [
@@ -383,6 +489,14 @@ export const menuNodes = [
   },
 ]
 
+export const getMenuNodes = (workflowMode: WorkflowMode) => {
+  if (workflowMode == WorkflowMode.Application) {
+    return menuNodes
+  }
+  if (workflowMode == WorkflowMode.ApplicationLoop) {
+    return applicationLoopMenuNodes
+  }
+}
 
 /**
  * 工具配置数据
@@ -462,6 +576,9 @@ export const nodeDict: any = {
   [WorkflowType.ImageGenerateNode]: imageGenerateNode,
   [WorkflowType.VariableAssignNode]: variableAssignNode,
   [WorkflowType.McpNode]: mcpNode,
+  [WorkflowType.LoopNode]: loopNode,
+  [WorkflowType.LoopBodyNode]: loopBodyNode,
+  [WorkflowType.LoopStartNode]: loopStartNode,
 }
 export function isWorkFlow(type: string | undefined) {
   return type === 'WORK_FLOW'

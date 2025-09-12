@@ -19,15 +19,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, inject } from 'vue'
 import { iconComponent } from '../icons/utils'
 import { t } from '@/locales'
+import { WorkflowMode } from '@/enums/application'
 const props = defineProps<{
   nodeModel: any
   modelValue: Array<any>
   global?: boolean
 }>()
 const emit = defineEmits(['update:modelValue'])
+const workflowMode = inject('workflowMode') as WorkflowMode
 const data = computed({
   set: (value) => {
     emit('update:modelValue', value)
@@ -50,15 +52,7 @@ const wheel = (e: any) => {
 
 function visibleChange(bool: boolean) {
   if (bool) {
-    options.value = props.global
-      ? props.nodeModel
-          .get_up_node_field_list(false, true)
-          .filter(
-            (v: any) => ['global', 'chat'].includes(v.value) && v.children && v.children.length > 0,
-          )
-      : props.nodeModel
-          .get_up_node_field_list(false, true)
-          .filter((v: any) => v.children && v.children.length > 0)
+    initOptions()
   }
 }
 
@@ -83,15 +77,40 @@ const validate = () => {
   }
   return Promise.resolve('')
 }
-defineExpose({ validate })
-onMounted(() => {
-  options.value = props.global
-    ? props.nodeModel
-        .get_up_node_field_list(false, true)
-        .filter(
+
+const get_up_node_field_list = (contain_self: boolean, use_cache: boolean) => {
+  const result = props.nodeModel.get_up_node_field_list(contain_self, use_cache)
+  if (props.nodeModel.graphModel.get_up_node_field_list) {
+    const _u = props.nodeModel.graphModel.get_up_node_field_list(contain_self, use_cache)
+
+    _u.forEach((item: any) => {
+      result.push(item)
+    })
+  }
+  return result.filter((v: any) => v.children && v.children.length > 0)
+}
+const initOptions = () => {
+  if (workflowMode == WorkflowMode.ApplicationLoop) {
+    options.value = props.global
+      ? get_up_node_field_list(false, true).filter(
           (v: any) => ['global', 'chat'].includes(v.value) && v.children && v.children.length > 0,
         )
-    : props.nodeModel.get_up_node_field_list(false, true)
+      : get_up_node_field_list(false, true).filter((v: any) => v.children && v.children.length > 0)
+  } else {
+    options.value = props.global
+      ? props.nodeModel
+          .get_up_node_field_list(false, true)
+          .filter(
+            (v: any) => ['global', 'chat'].includes(v.value) && v.children && v.children.length > 0,
+          )
+      : props.nodeModel
+          .get_up_node_field_list(false, true)
+          .filter((v: any) => v.children && v.children.length > 0)
+  }
+}
+defineExpose({ validate })
+onMounted(() => {
+  initOptions()
 })
 </script>
 <style scoped></style>
