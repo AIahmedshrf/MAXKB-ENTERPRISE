@@ -10,7 +10,7 @@ import uuid_utils.compat as uuid
 
 from maxkb.const import BASE_DIR, CONFIG
 from maxkb.const import PROJECT_DIR
-
+import tempfile
 python_directory = sys.executable
 
 
@@ -212,4 +212,15 @@ exec({dedent(code)!a})
 
     @staticmethod
     def _exec(_code):
-        return subprocess.run([python_directory, '-c', _code], text=True, capture_output=True)
+         @staticmethod
+    def _exec(_code):
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as temp_file:
+            temp_file.write(_code)
+            temp_file_path = temp_file.name
+        try:
+            return subprocess.run([python_directory, temp_file_path], text=True, capture_output=True)
+        finally:
+            try:
+                os.unlink(temp_file_path)
+            except:
+                pass 
