@@ -680,10 +680,16 @@ class WorkflowManage:
         return None
 
     @staticmethod
-    def dependent_node(up_node_id, node):
+    def dependent_node(edge, node):
+        up_node_id = edge.sourceNodeId
         if not node.node_chunk.is_end():
             return False
         if node.id == up_node_id:
+            if node.context.get('branch_id', None):
+                if edge.sourceAnchorId == f"{node.id}_{node.context.get('branch_id', None)}_right":
+                    return True
+                else:
+                    return False
             if node.type == 'form-node':
                 if node.context.get('form_data', None) is not None:
                     return True
@@ -696,9 +702,11 @@ class WorkflowManage:
         @param node_id: 需要判断的节点id
         @return:
         """
-        up_node_id_list = [edge.sourceNodeId for edge in self.flow.edges if edge.targetNodeId == node_id]
-        return all([any([self.dependent_node(up_node_id, node) for node in self.node_context]) for up_node_id in
-                    up_node_id_list])
+        up_edge_list = [edge for edge in self.flow.edges if edge.targetNodeId == node_id]
+        return all(
+            [any([self.dependent_node(edge, node) for node in self.node_context if node.id == edge.sourceNodeId]) for
+             edge in
+             up_edge_list])
 
     def get_up_node_id_list(self, node_id):
         up_node_id_list = [edge.sourceNodeId for edge in self.flow.edges if edge.targetNodeId == node_id]
