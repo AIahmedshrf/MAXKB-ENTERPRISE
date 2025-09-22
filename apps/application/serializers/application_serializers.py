@@ -322,6 +322,7 @@ class ApplicationSerializer(serializers.Serializer):
 
         def get_query_api_input(self, application, params):
             query = ''
+            is_asker = False
             if application.work_flow is not None:
                 work_flow = application.work_flow
                 if work_flow is not None:
@@ -333,8 +334,10 @@ class ApplicationSerializer(serializers.Serializer):
                             if input_field_list is not None:
                                 for field in input_field_list:
                                     if field['assignment_method'] == 'api_input' and field['variable'] in params:
+                                        if field['variable'] == 'asker':
+                                            is_asker = True
                                         query += f"&{field['variable']}={params[field['variable']]}"
-            if 'asker' in params:
+            if 'asker' in params and not is_asker:
                 query += f"&asker={params.get('asker')}"
             return query
 
