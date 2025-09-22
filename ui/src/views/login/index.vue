@@ -135,21 +135,27 @@ import QrCodeTab from '@/views/login/components/QrCodeTab.vue'
 import { useI18n } from 'vue-i18n'
 import * as dd from 'dingtalk-jsapi'
 import { loadScript } from '@/utils/utils'
+
 const { locale } = useI18n({ useScope: 'global' })
 const loading = ref<boolean>(false)
 const { user } = useStore()
 const router = useRouter()
+import forge from 'node-forge'
+
 const loginForm = ref<LoginRequest>({
   username: '',
   password: '',
-  captcha: ''
+  captcha: '',
+  encryptedData: ''
 })
 const identifyCode = ref<string>('')
+
 function makeCode() {
   useApi.getCaptcha().then((res: any) => {
     identifyCode.value = res.data
   })
 }
+
 const rules = ref<FormRules<LoginRequest>>({
   username: [
     {
@@ -270,18 +276,28 @@ const login = () => {
   loginFormRef.value?.validate((valid) => {
     if (valid) {
       loading.value = true
-      user
-        .login(
-          loginMode.value,
-          loginForm.value.username,
-          loginForm.value.password,
-          loginForm.value.captcha
-        )
-        .then(() => {
-          locale.value = localStorage.getItem('MaxKB-locale') || getBrowserLang() || 'en-US'
-          router.push({ name: 'home' })
-        })
-        .finally(() => (loading.value = false))
+      if (loginMode.value === 'LDAP') {
+        user
+          .asyncLdapLogin(loginForm.value)
+          .then(() => {
+            locale.value = localStorage.getItem('MaxKB-locale') || getBrowserLang() || 'en-US'
+            router.push({ name: 'home' })
+          })
+          .catch(() => {
+            loading.value = false
+          })
+      } else {
+        const publicKey = forge.pki.publicKeyFromPem(user.rasKey)
+        const encrypted = publicKey.encrypt(JSON.stringify(loginForm.value), 'RSAES-PKCS1-V1_5')
+        const encryptedBase64 = forge.util.encode64(encrypted)
+        user
+          .login({ encryptedData: encryptedBase64, username: loginForm.value.username })
+          .then(() => {
+            locale.value = localStorage.getItem('MaxKB-locale') || getBrowserLang() || 'en-US'
+            router.push({ name: 'home' })
+          })
+          .finally(() => (loading.value = false))
+      }
     }
   })
 }

@@ -41,6 +41,7 @@ interface LoginRequest {
    * 验证码
    */
   captcha: string
+  encryptedData?: string
 }
 
 interface RegisterRequest {

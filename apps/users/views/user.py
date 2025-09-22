@@ -84,7 +84,7 @@ class SwitchUserLanguageView(APIView):
                                                             description=_("language")),
                              }
                          ),
-                         responses=RePasswordSerializer().get_response_body_api(),
+                         responses=result.get_default_response(),
                          tags=[_("User management")])
     @log(menu='User management', operate='Switch Language',
          get_operation_object=lambda r, k: {'name': r.user.username})
@@ -111,7 +111,7 @@ class ResetCurrentUserPasswordView(APIView):
                                                                description=_("Password"))
                              }
                          ),
-                         responses=RePasswordSerializer().get_response_body_api(),
+                         responses=result.get_default_response(),
                          tags=[_("User management")])
     @log(menu='User management', operate='Modify current user password',
          get_operation_object=lambda r, k: {'name': r.user.username},
@@ -195,10 +195,8 @@ class Login(APIView):
          get_details=_get_details,
          get_operation_object=lambda r, k: {'name': r.data.get('username')})
     def post(self, request: Request):
-        login_request = LoginSerializer(data=request.data)
-        # 校验请求参数
-        user = login_request.is_valid(raise_exception=True)
-        token = login_request.get_user_token()
+        user = LoginSerializer().login(request.data)
+        token = LoginSerializer().get_user_token(user)
         token_cache.set(token, user, timeout=CONFIG.get_session_timeout())
         return result.success(token)
 

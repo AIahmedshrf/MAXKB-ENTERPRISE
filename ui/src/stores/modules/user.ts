@@ -8,6 +8,7 @@ import { useElementPlusTheme } from 'use-element-plus-theme'
 import { defaultPlatformSetting } from '@/utils/theme'
 import { useLocalStorage } from '@vueuse/core'
 import { localeConfigKey, getBrowserLang } from '@/locales/index'
+
 export interface userStateTypes {
   userType: number // 1 系统操作者 2 对话用户
   userInfo: User | null
@@ -17,6 +18,7 @@ export interface userStateTypes {
   XPACK_LICENSE_IS_VALID: false
   isXPack: false
   themeInfo: any
+  rasKey: string
 }
 
 const useUserStore = defineStore({
@@ -29,7 +31,8 @@ const useUserStore = defineStore({
     userAccessToken: '',
     XPACK_LICENSE_IS_VALID: false,
     isXPack: false,
-    themeInfo: null
+    themeInfo: null,
+    rasKey: ''
   }),
   actions: {
     getLanguage() {
@@ -100,6 +103,7 @@ const useUserStore = defineStore({
             this.version = ok.data?.version || '-'
             this.isXPack = ok.data?.IS_XPACK
             this.XPACK_LICENSE_IS_VALID = ok.data?.XPACK_LICENSE_IS_VALID
+            this.rasKey = ok.data?.ras || ''
 
             if (this.isEnterprise()) {
               await this.theme()
@@ -135,8 +139,15 @@ const useUserStore = defineStore({
       })
     },
 
-    async login(auth_type: string, username: string, password: string, captcha: string) {
-      return UserApi.login(auth_type, { username, password, captcha }).then((ok) => {
+    async login(data: any, loading?: Ref<boolean>) {
+      return UserApi.login(data).then((ok) => {
+        this.token = ok.data
+        localStorage.setItem('token', ok.data)
+        return this.profile()
+      })
+    },
+    async asyncLdapLogin(data: any, loading?: Ref<boolean>) {
+      return UserApi.ldapLogin(data).then((ok) => {
         this.token = ok.data
         localStorage.setItem('token', ok.data)
         return this.profile()

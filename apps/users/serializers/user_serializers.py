@@ -8,6 +8,7 @@
 """
 import base64
 import datetime
+import json
 import os
 import random
 import re
@@ -37,6 +38,7 @@ from common.response.result import get_api_response
 from common.util.common import valid_license, get_random_chars
 from common.util.field_message import ErrMessage
 from common.util.lock import lock
+from common.util.rsa_util import decrypt, get_key_pair_by_sql
 from dataset.models import DataSet, Document, Paragraph, Problem, ProblemParagraphMapping
 from embedding.task import delete_embedding_by_dataset_id_list
 from function_lib.models.function import FunctionLib
@@ -75,7 +77,8 @@ class SystemSerializer(ApiMixin, serializers.Serializer):
         xpack_cache = DBModelManage.get_model('xpack_cache')
         return {'version': version, 'IS_XPACK': hasattr(settings, 'IS_XPACK'),
                 'XPACK_LICENSE_IS_VALID': False if xpack_cache is None else xpack_cache.get('XPACK_LICENSE_IS_VALID',
-                                                                                            False)}
+                                                                                            False),
+                'ras': get_key_pair_by_sql().get('key')}
 
     @staticmethod
     def get_response_body_api():
@@ -96,35 +99,13 @@ class LoginSerializer(ApiMixin, serializers.Serializer):
     password = serializers.CharField(required=True, error_messages=ErrMessage.char(_("Password")))
 
     captcha = serializers.CharField(required=True, error_messages=ErrMessage.char(_("captcha")))
+    encryptedData = serializers.CharField(required=False, label=_('encryptedData'), allow_null=True,
+                                          allow_blank=True)
 
-    def is_valid(self, *, raise_exception=False):
+    def get_user_token(self,  user):
         """
-        校验参数
-        :param raise_exception: Whether to throw an exception can only be True
-        :return: User information
-        """
-        super().is_valid(raise_exception=True)
-        captcha = self.data.get('captcha')
-        captcha_value = captcha_cache.get(f"LOGIN:{captcha.lower()}")
-        if captcha_value is None:
-            raise AppApiException(1005, _("Captcha code error or expiration"))
-        username = self.data.get("username")
-        password = password_encrypt(self.data.get("password"))
-        user = QuerySet(User).filter(Q(username=username,
-                                       password=password) | Q(email=username,
-                                                              password=password)).first()
-        if user is None:
-            raise ExceptionCodeConstants.INCORRECT_USERNAME_AND_PASSWORD.value.to_app_api_exception()
-        if not user.is_active:
-            raise AppApiException(1005, _("The user has been disabled, please contact the administrator!"))
-        return user
-
-    def get_user_token(self):
-        """
-        Get user token
         :return: User Token (authentication information)
         """
-        user = self.is_valid()
         token = signing.dumps({'username': user.username, 'id': str(user.id), 'email': user.email,
                                'type': AuthenticationType.USER.value})
         return token
@@ -136,11 +117,13 @@ class LoginSerializer(ApiMixin, serializers.Serializer):
     def get_request_body_api(self):
         return openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['username', 'password'],
+            required=['username', 'encryptedData'],
             properties={
                 'username': openapi.Schema(type=openapi.TYPE_STRING, title=_("Username"), description=_("Username")),
                 'password': openapi.Schema(type=openapi.TYPE_STRING, title=_("Password"), description=_("Password")),
-                'captcha': openapi.Schema(type=openapi.TYPE_STRING, title=_("captcha"), description=_("captcha"))
+                'captcha': openapi.Schema(type=openapi.TYPE_STRING, title=_("captcha"), description=_("captcha")),
+                'encryptedData': openapi.Schema(type=openapi.TYPE_STRING, title=_("encryptedData"),
+                                                description=_("encryptedData"))
             }
         )
 
@@ -151,6 +134,29 @@ class LoginSerializer(ApiMixin, serializers.Serializer):
             default="xxxx",
             description="认证token"
         ))
+
+    @staticmethod
+    def login(instance):
+        username = instance.get("username", "")
+        encryptedData = instance.get("encryptedData", "")
+        if encryptedData:
+            json_data = json.loads(decrypt(encryptedData))
+            instance.update(json_data)
+        LoginSerializer(data=instance).is_valid(raise_exception=True)
+        password = instance.get("password")
+        captcha = instance.get("captcha", "")
+        captcha_value = captcha_cache.get(f"LOGIN:{captcha.lower()}")
+        if captcha_value is None:
+            raise AppApiException(1005, _("Captcha code error or expiration"))
+        user = QuerySet(User).filter(Q(username=username,
+                                       password=password_encrypt(password)) | Q(email=username,
+                                                                                password=password_encrypt(
+                                                                                    password))).first()
+        if user is None:
+            raise ExceptionCodeConstants.INCORRECT_USERNAME_AND_PASSWORD.value.to_app_api_exception()
+        if not user.is_active:
+            raise AppApiException(1005, _("The user has been disabled, please contact the administrator!"))
+        return user
 
 
 class RegisterSerializer(ApiMixin, serializers.Serializer):

@@ -10,22 +10,19 @@ import type {
 } from '@/api/type/user'
 import type { Ref } from 'vue'
 
-/**
- * 登录
- * @param auth_type
- * @param request 登录接口请求表单
- * @param loading 接口加载器
- * @returns 认证数据
- */
-const login: (
-  auth_type: string,
-  request: LoginRequest,
-  loading?: Ref<boolean>
-) => Promise<Result<string>> = (auth_type, request, loading) => {
-  if (auth_type !== '') {
-    return post(`/${auth_type}/login`, request, undefined, loading)
-  }
+
+const login: (request: LoginRequest, loading?: Ref<boolean>) => Promise<Result<any>> = (
+  request,
+  loading
+) => {
   return post('/user/login', request, undefined, loading)
+}
+
+const ldapLogin: (request: LoginRequest, loading?: Ref<boolean>) => Promise<Result<any>> = (
+  request,
+  loading
+) => {
+  return post('/ldap/login', request, undefined, loading)
 }
 /**
  * 获取图形验证码
@@ -234,5 +231,6 @@ export default {
   getDingOauth2Callback,
   getlarkCallback,
   getQrSource,
-  getCaptcha
+  getCaptcha,
+  ldapLogin
 }
