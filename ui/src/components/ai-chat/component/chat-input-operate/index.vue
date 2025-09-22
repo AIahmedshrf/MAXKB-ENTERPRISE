@@ -163,7 +163,7 @@
           @TouchEnd="TouchEnd"
           :time="recorderTime"
           :start="recorderStatus === 'START'"
-          :disabled="loading"
+          :disabled="localLoading"
         />
         <el-input
           v-else
@@ -199,7 +199,7 @@
             </span>
             <span class="flex align-center" v-else>
               <el-button
-                :disabled="loading"
+                :disabled="localLoading"
                 text
                 @click="startRecording"
                 v-if="recorderStatus === 'STOP'"
@@ -252,7 +252,7 @@
                       }}：{{ getAcceptList().replace(/\./g, '').replace(/,/g, '、').toUpperCase() }}
                     </div>
                   </template>
-                  <el-button text :disabled="checkMaxFilesLimit() || loading" class="mt-4">
+                  <el-button text :disabled="checkMaxFilesLimit() || localLoading" class="mt-4">
                     <el-icon><Paperclip /></el-icon>
                   </el-button>
                 </el-tooltip>
@@ -268,11 +268,11 @@
             <el-button
               text
               class="sent-button"
-              :disabled="isDisabledChat || loading"
+              :disabled="isDisabledChat || localLoading"
               @click="sendChatHandle"
             >
-              <img v-show="isDisabledChat || loading" src="@/assets/icon_send.svg" alt="" />
-              <SendIcon v-show="!isDisabledChat && !loading" />
+              <img v-show="isDisabledChat || localLoading" src="@/assets/icon_send.svg" alt="" />
+              <SendIcon v-show="!isDisabledChat && !localLoading" />
             </el-button>
           </template>
         </div>
@@ -339,9 +339,13 @@ const chatId_context = computed({
     emit('update:chatId', v)
   }
 })
+const uploadLoading = computed(() => {
+  return Object.values(filePromisionDict.value).length > 0
+})
+
 const localLoading = computed({
   get: () => {
-    return props.loading
+    return props.loading || uploadLoading.value
   },
   set: (v) => {
     emit('update:loading', v)
@@ -393,7 +397,7 @@ const checkMaxFilesLimit = () => {
       uploadOtherList.value.length
   )
 }
-
+const filePromisionDict: any = ref<any>({})
 const uploadFile = async (file: any, fileList: any) => {
   const { maxFiles, fileLimit } = props.applicationDetails.file_upload_setting
   // 单次上传文件数量限制
@@ -414,7 +418,7 @@ const uploadFile = async (file: any, fileList: any) => {
     fileList.splice(0, fileList.length)
     return
   }
-
+  filePromisionDict.value[file.uid] = false
   const formData = new FormData()
   formData.append('file', file.raw, file.name)
   //
@@ -454,6 +458,7 @@ const uploadFile = async (file: any, fileList: any) => {
       fileList.splice(0, fileList.length)
       file.url = response.data[0].url
       file.file_id = response.data[0].file_id
+      delete filePromisionDict.value[file.uid]
     })
 }
 // 粘贴处理
@@ -798,7 +803,7 @@ function sendChatHandle(event?: any) {
   if (!event?.ctrlKey && !event?.shiftKey && !event?.altKey && !event?.metaKey) {
     // 如果没有按下组合键，则会阻止默认事件
     event?.preventDefault()
-    if (!isDisabledChat.value && !props.loading && !event?.isComposing) {
+    if (!isDisabledChat.value && !localLoading.value && !event?.isComposing) {
       if (
         inputValue.value.trim() ||
         uploadImageList.value.length > 0 ||
