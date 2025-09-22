@@ -61,8 +61,6 @@ class ApplicationApi(ApiMixin):
                 'user_id': openapi.Schema(type=openapi.TYPE_STRING, title=_("Affiliation user"),
                                           description=_("Affiliation user")),
 
-                'status': openapi.Schema(type=openapi.TYPE_BOOLEAN, title=_("Is publish"), description=_('Is publish')),
-
                 'create_time': openapi.Schema(type=openapi.TYPE_STRING, title=_("Creation time"),
                                               description=_('Creation time')),
 
