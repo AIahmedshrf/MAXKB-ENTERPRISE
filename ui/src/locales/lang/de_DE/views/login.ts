@@ -1,0 +1,61 @@
+export default {
+  title: 'Anmeldung',
+  loginForm: {
+    username: {
+      label: 'Benutzername',
+      placeholder: 'Bitte Benutzernamen eingeben',
+      requiredMessage: 'Bitte Benutzernamen eingeben',
+      lengthMessage: 'Die Länge muss zwischen 4 und 20 Zeichen liegen',
+    },
+    password: {
+      label: 'Anmeldepasswort',
+      placeholder: 'Bitte Passwort eingeben',
+      requiredMessage: 'Bitte Passwort eingeben',
+      lengthMessage: 'Die Länge muss zwischen 6 und 20 Zeichen liegen',
+    },
+    captcha: {
+      label: 'Verifizierungscode',
+      placeholder: 'Bitte Verifizierungscode eingeben',
+      requiredMessage: 'Bitte Verifizierungscode eingeben',
+      validatorMessage: 'Verifizierungscode ist falsch',
+    },
+    new_password: {
+      label: 'Neues Passwort',
+      placeholder: 'Bitte neues Passwort eingeben',
+      requiredMessage: 'Bitte neues Passwort eingeben',
+    },
+    re_password: {
+      label: 'Passwort bestätigen',
+      placeholder: 'Bitte Passwort bestätigen',
+      requiredMessage: 'Bitte Passwort bestätigen',
+      validatorMessage: 'Passwörter stimmen nicht überein',
+    },
+    email: {
+      label: 'E-Mail',
+      placeholder: 'Bitte E-Mail-Adresse eingeben',
+      requiredMessage: 'Bitte E-Mail-Adresse eingeben',
+      validatorEmail: 'Bitte ein gültiges E-Mail-Format eingeben!',
+    },
+  },
+  jump_tip: 'Sie werden zur Authentifizierungsseite der Quelle weitergeleitet',
+  jump: 'Weiterleiten',
+  resetPassword: 'Passwort ändern',
+  forgotPassword: 'Passwort vergessen',
+  userRegister: 'Benutzerregistrierung',
+  buttons: {
+    login: 'Anmelden',
+    register: 'Registrieren',
+    backLogin: 'Zurück zur Anmeldung',
+    checkCode: 'Jetzt überprüfen',
+  },
+  newPassword: 'Neues Passwort',
+  enterPassword: 'Bitte neues Passwort eingeben',
+  useEmail: 'E-Mail verwenden',
+  moreMethod: 'Weitere Anmeldemethoden',
+  verificationCode: {
+    placeholder: 'Bitte Verifizierungscode eingeben',
+    getVerificationCode: 'Verifizierungscode anfordern',
+    successMessage: 'Verifizierungscode erfolgreich gesendet',
+    resend: 'Erneut senden',
+  },
+}
