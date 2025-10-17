@@ -316,7 +316,7 @@
       </div>
     </div>
 
-    <div class="text-center" v-if="applicationDetails.disclaimer" style="margin-top: 8px">
+    <div class="text-center mt-8" v-if="applicationDetails.disclaimer">
       <el-text type="info" v-if="applicationDetails.disclaimer" style="font-size: 12px">
         <auto-tooltip :content="applicationDetails.disclaimer_value">
           {{ applicationDetails.disclaimer_value }}
@@ -807,6 +807,7 @@ const getQuestion = () => {
       uploadImageList.value.length > 0,
       uploadDocumentList.value.length > 0,
       uploadAudioList.value.length > 0,
+      uploadVideoList.value.length > 0,
       uploadOtherList.value.length > 0,
     ]
     if (fileLength.filter((f) => f).length > 1) {
@@ -818,6 +819,8 @@ const getQuestion = () => {
     } else if (fileLength[2]) {
       return t('chat.uploadFile.audioMessage')
     } else if (fileLength[3]) {
+      return t('chat.uploadFile.videoMessage')
+    } else if (fileLength[4]) {
       return t('chat.uploadFile.otherMessage')
     }
   }
