@@ -27,7 +27,7 @@ class XInferenceSTTModelCredential(BaseForm, BaseModelCredential):
                 else:
                     return False
         try:
-            model = provider.get_model(model_type, model_name, model_credential)
+            model = provider.get_model(model_type, model_name, model_credential, **model_params)
             model.check_auth()
         except Exception as e:
             if isinstance(e, AppApiException):
@@ -44,4 +44,4 @@ class XInferenceSTTModelCredential(BaseForm, BaseModelCredential):
         return {**model, 'api_key': super().encryption(model.get('api_key', ''))}
 
     def get_model_params_setting_form(self, model_name):
-        pass
+        return
