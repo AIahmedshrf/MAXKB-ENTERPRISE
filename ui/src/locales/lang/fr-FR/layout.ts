@@ -1,0 +1,40 @@
+export default {
+  github: 'Source Github',
+  wiki: 'Manuel d\'utilisateur',
+  forum: 'Forum d\'aide',
+  logout: 'Déconnexion',
+  apiKey: 'Clé API',
+  apiServiceAddress: 'Adresse du service API',
+  language: 'Langue',
+  isExpire: 'Licence non téléchargée ou expirée',
+  about: {
+    title: 'À propos',
+    expiredTime: 'Date d\'expiration',
+    edition: {
+      label: 'Édition',
+      community: 'Édition communautaire',
+      professional: 'Édition professionnelle',
+      enterprise: 'Édition entreprise',
+    },
+    version: 'Version',
+    serialNo: 'N° de série',
+    remark: 'Remarques',
+    update: 'Mettre à jour',
+    authorize: 'Autorisé',
+    inner_admin: 'Administrateur système',
+    inner_wsm: 'Gestionnaire d\'espace de travail',
+    inner_user: 'Utilisateur normal',
+    root: 'Répertoire racine',
+    default_workspace: 'Espace de travail par défaut',
+    default_user_group: 'Groupe d\'utilisateurs par défaut',
+  },
+  time: {
+    daysLater: 'jours plus tard',
+    hoursLater: 'heures plus tard',
+    expired: 'expiré',
+    expiringSoon: 'expire bientôt'
+  },
+  copyright: 'Copyright © 2014-2025 FIT2CLOUD, Tous droits réservés.',
+  userManualUrl: 'http://docs.maxkb.hk/',
+  forumUrl: 'https://github.com/1Panel-dev/MaxKB/discussions'
+}

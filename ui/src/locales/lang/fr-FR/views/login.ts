@@ -1,0 +1,61 @@
+export default {
+  title: 'Connexion',
+  loginForm: {
+    username: {
+      label: 'Nom d\'utilisateur',
+      placeholder: 'Veuillez entrer le nom d\'utilisateur',
+      requiredMessage: 'Veuillez entrer le nom d\'utilisateur',
+      lengthMessage: 'La longueur doit être entre 4 et 20 caractères',
+    },
+    password: {
+      label: 'Mot de passe',
+      placeholder: 'Veuillez entrer le mot de passe',
+      requiredMessage: 'Veuillez entrer le mot de passe',
+      lengthMessage: 'La longueur doit être entre 6 et 20 caractères',
+    },
+    captcha: {
+      label: 'Code de vérification',
+      placeholder: 'Veuillez entrer le code de vérification',
+      requiredMessage: 'Veuillez entrer le code de vérification',
+      validatorMessage: 'Le code de vérification est incorrect',
+    },
+    new_password: {
+      label: 'Nouveau mot de passe',
+      placeholder: 'Veuillez entrer le nouveau mot de passe',
+      requiredMessage: 'Veuillez entrer le nouveau mot de passe',
+    },
+    re_password: {
+      label: 'Confirmer le mot de passe',
+      placeholder: 'Veuillez entrer la confirmation du mot de passe',
+      requiredMessage: 'Veuillez entrer la confirmation du mot de passe',
+      validatorMessage: 'Le mot de passe ne correspond pas',
+    },
+    email: {
+      label: 'Email',
+      placeholder: 'Veuillez entrer l\'email',
+      requiredMessage: 'Veuillez entrer l\'email',
+      validatorEmail: 'Veuillez entrer un format d\'email valide !',
+    },
+  },
+  jump_tip: 'Vous serez redirigé vers la page de la source d\'authentification pour l\'authentification',
+  jump: 'Redirection',
+  resetPassword: 'Changer le mot de passe',
+  forgotPassword: 'Mot de passe oublié',
+  userRegister: 'Inscription utilisateur',
+  buttons: {
+    login: 'Connexion',
+    register: 'S\'inscrire',
+    backLogin: 'Retour à la connexion',
+    checkCode: 'Vérifier maintenant',
+  },
+  newPassword: 'Nouveau mot de passe',
+  enterPassword: 'Veuillez entrer votre nouveau mot de passe',
+  useEmail: 'Utiliser l\'email',
+  moreMethod: 'Plus de méthodes de connexion',
+  verificationCode: {
+    placeholder: 'Veuillez entrer le code de vérification',
+    getVerificationCode: 'Obtenir le code de vérification',
+    successMessage: 'Code de vérification envoyé avec succès',
+    resend: 'Renvoyer',
+  },
+}

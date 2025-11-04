@@ -1,0 +1,13 @@
+Poste, Type de remboursement, Norme de remboursement ville de premier rang (yuan), Norme de remboursement ville de deuxième rang (yuan), Norme de remboursement ville de troisième rang (yuan)
+Employés ordinaires, Frais d'hébergement, 500, 400, 300
+Chef de département, Frais d'hébergement, 600, 500, 400
+Directeur de département, Frais d'hébergement, 700, 600, 500
+Directeur général régional, Frais d'hébergement, 800, 700, 600
+Employés ordinaires, Frais de repas, 50, 40, 30
+Chef de département, Frais de repas, 50, 40, 30
+Directeur de département, Frais de repas, 50, 40, 30
+Directeur général régional, Frais de repas, 50, 40, 30
+Employés ordinaires, Frais de transport, 50, 40, 30
+Chef de département, Frais de transport, 50, 40, 30
+Directeur de département, Frais de transport, 50, 40, 30
+Directeur général régional, Frais de transport, 50, 40, 30
