@@ -7,9 +7,12 @@ from rest_framework.views import APIView
 
 from common.auth import TokenAuth
 from common.auth.authentication import has_permissions
-from common.constants.permission_constants import PermissionConstants, RoleConstants
+from common.constants.permission_constants import PermissionConstants, RoleConstants, ViewPermission, CompareConstants
+from common.log.log import log
 from common.result import result
 from knowledge.api.knowledge_workflow import KnowledgeWorkflowApi
+from knowledge.serializers.common import get_knowledge_operation_object
+from knowledge.serializers.knowledge import KnowledgeSerializer
 from knowledge.serializers.knowledge_workflow import KnowledgeWorkflowSerializer
 
 
@@ -17,7 +20,7 @@ class KnowledgeWorkflowView(APIView):
     authentication_classes = [TokenAuth]
 
     @extend_schema(
-        methods=['GET'],
+        methods=['POST'],
         description=_('Create knowledge workflow'),
         summary=_('Create knowledge workflow'),
         operation_id=_('Create knowledge workflow'),  # type: ignore
@@ -33,6 +36,62 @@ class KnowledgeWorkflowView(APIView):
         return result.success(KnowledgeWorkflowSerializer.Create(
             data={'user_id': request.user.id, 'workspace_id': workspace_id}
         ).save_workflow(request.data))
+
+    class Operate(APIView):
+        authentication_classes = [TokenAuth]
+
+        @extend_schema(
+            methods=['PUT'],
+            description=_('Edit knowledge workflow'),
+            summary=_('Edit knowledge workflow'),
+            operation_id=_('Edit knowledge workflow'),  # type: ignore
+            parameters=KnowledgeWorkflowApi.get_parameters(),
+            request=KnowledgeWorkflowApi.get_request(),
+            responses=KnowledgeWorkflowApi.get_response(),
+            tags=[_('Knowledge Base')]  # type: ignore
+        )
+        @has_permissions(
+            PermissionConstants.KNOWLEDGE_EDIT.get_workspace_knowledge_permission(),
+            PermissionConstants.KNOWLEDGE_EDIT.get_workspace_permission_workspace_manage_role(),
+            RoleConstants.WORKSPACE_MANAGE.get_workspace_role(),
+            ViewPermission(
+                [RoleConstants.USER.get_workspace_role()],
+                [PermissionConstants.KNOWLEDGE.get_workspace_knowledge_permission()],
+                CompareConstants.AND
+            )
+        )
+        @log(
+            menu='Knowledge Base', operate="Modify knowledge workflow",
+            get_operation_object=lambda r, keywords: get_knowledge_operation_object(keywords.get('knowledge_id')),
+        )
+        def put(self, request: Request, workspace_id: str, knowledge_id: str):
+            return result.success(KnowledgeWorkflowSerializer.Operate(
+                data={'user_id': request.user.id, 'workspace_id': workspace_id, 'knowledge_id': knowledge_id}
+            ).edit(request.data))
+
+        @extend_schema(
+            methods=['GET'],
+            description=_('Get knowledge workflow'),
+            summary=_('Get knowledge workflow'),
+            operation_id=_('Get knowledge workflow'),  # type: ignore
+            parameters=KnowledgeWorkflowApi.get_parameters(),
+            responses=KnowledgeWorkflowApi.get_response(),
+            tags=[_('Knowledge Base')]  # type: ignore
+        )
+        @has_permissions(
+            PermissionConstants.KNOWLEDGE_READ.get_workspace_knowledge_permission(),
+            PermissionConstants.KNOWLEDGE_READ.get_workspace_permission_workspace_manage_role(),
+            RoleConstants.WORKSPACE_MANAGE.get_workspace_role(),
+            ViewPermission(
+                [RoleConstants.USER.get_workspace_role()],
+                [PermissionConstants.KNOWLEDGE.get_workspace_knowledge_permission()],
+                CompareConstants.AND
+            ),
+        )
+        def get(self, request: Request, workspace_id: str, knowledge_id: str):
+            return result.success(KnowledgeWorkflowSerializer.Operate(
+                data={'user_id': request.user.id, 'workspace_id': workspace_id, 'knowledge_id': knowledge_id}
+            ).one())
 
 
 class KnowledgeWorkflowVersionView(APIView):

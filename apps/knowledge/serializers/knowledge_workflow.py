@@ -15,6 +15,12 @@ from system_manage.models import AuthTargetType
 from system_manage.serializers.user_resource_permission import UserResourcePermissionSerializer
 
 
+class KnowledgeWorkflowModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KnowledgeWorkflow
+        fields = '__all__'
+
+
 class KnowledgeWorkflowSerializer(serializers.Serializer):
     class Create(serializers.Serializer):
         user_id = serializers.UUIDField(required=True, label=_('user id'))
@@ -59,9 +65,21 @@ class KnowledgeWorkflowSerializer(serializers.Serializer):
                 knowledge_id=knowledge_id,
                 workspace_id=self.data.get('workspace_id'),
                 work_flow=instance.get('work_flow', {}),
-
             )
 
             knowledge_workflow.save()
 
             return {**KnowledgeModelSerializer(knowledge).data, 'document_list': []}
+
+    class Operate(serializers.Serializer):
+        user_id = serializers.UUIDField(required=True, label=_('user id'))
+        workspace_id = serializers.CharField(required=True, label=_('workspace id'))
+        knowledge_id = serializers.UUIDField(required=True, label=_('knowledge id'))
+
+        def edit(self, instance: Dict):
+            pass
+
+        def one(self):
+            self.is_valid(raise_exception=True)
+            workflow = QuerySet(KnowledgeWorkflow).filter(knowledge_id=self.data.get('knowledge_id')).first()
+            return {**KnowledgeWorkflowModelSerializer(workflow).data}
