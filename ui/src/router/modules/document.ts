@@ -102,8 +102,8 @@ const DocumentRouter = {
       component: () => import('@/views/document/index.vue'),
     },
     {
-      path: 'setting',
-      name: 'knowledge-setting',
+      path: 'knowledge-workflow-setting',
+      name: 'knowledgeWorkflowSetting',
       meta: {
         title: '知识库工作流',
         icon: 'app-problems',
@@ -133,7 +133,7 @@ const DocumentRouter = {
         iconActive: 'QuestionFilled',
         title: 'views.problem.title',
         active: 'problem',
-        parentPath: '/knowledge/:id/:folderId',
+        parentPath: '/knowledge/:id/:folderId/:type',
         parentName: 'KnowledgeDetail',
         group: 'KnowledgeDetail',
         permission: [
@@ -224,7 +224,7 @@ const DocumentRouter = {
         icon: 'app-hit-test',
         title: 'views.application.hitTest.title',
         active: 'hit-test',
-        parentPath: '/knowledge/:id/:folderId',
+        parentPath: '/knowledge/:id/:folderId/:type',
         parentName: 'KnowledgeDetail',
         group: 'KnowledgeDetail',
         permission: [
@@ -316,7 +316,7 @@ const DocumentRouter = {
         iconActive: 'app-user-chat-active',
         title: 'views.chatUser.title',
         active: 'chat-user',
-        parentPath: '/knowledge/:id/:folderId',
+        parentPath: '/knowledge/:id/:folderId/:type',
         parentName: 'KnowledgeDetail',
         resourceType: SourceTypeEnum.KNOWLEDGE,
         group: 'KnowledgeDetail',
@@ -421,7 +421,7 @@ const DocumentRouter = {
         iconActive: 'app-setting-active',
         title: 'common.setting',
         active: 'setting',
-        parentPath: '/knowledge/:id/:folderId',
+        parentPath: '/knowledge/:id/:folderId/:type',
         parentName: 'KnowledgeDetail',
         group: 'KnowledgeDetail',
         permission: [
