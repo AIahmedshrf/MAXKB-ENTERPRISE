@@ -20,7 +20,8 @@ class BaseDataSourceLocalNode(IDataSourceLocalNode):
     def save_context(self, details, workflow_manage):
         pass
 
-    def get_form_class(self):
+    @staticmethod
+    def get_form_class():
         return BaseDataSourceLocalNodeForm()
 
     def execute(self, file_format, max_file_number, file_max_size, **kwargs) -> NodeResult:

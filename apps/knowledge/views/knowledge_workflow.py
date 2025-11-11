@@ -18,8 +18,8 @@ from knowledge.serializers.knowledge_workflow import KnowledgeWorkflowSerializer
 class KnowledgeWorkflowFormView(APIView):
     authentication_classes = [TokenAuth]
 
-    def get(self):
-        return result.success(KnowledgeWorkflowSerializer.Form().get_form_list())
+    def get(self, request: Request, workspace_id: str, knowledge_id: str, type: str, id: str):
+        return result.success(KnowledgeWorkflowSerializer.Form(data={'type': type, 'id': id}).get_form_list())
 
 
 class KnowledgeWorkflowView(APIView):

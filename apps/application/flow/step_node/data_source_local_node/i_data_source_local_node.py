@@ -16,7 +16,7 @@ from application.flow.i_step_node import INode, NodeResult
 
 
 class DataSourceLocalNodeParamsSerializer(serializers.Serializer):
-    file_format = serializers.ListField(child=serializers.CharField)
+    file_format = serializers.ListField(child=serializers.CharField(label=('')), label='')
     max_file_number = serializers.IntegerField(required=True, label=_("Number of uploaded files"))
     file_max_size = serializers.IntegerField(required=True, label=_("Upload file size"))
 
@@ -24,8 +24,9 @@ class DataSourceLocalNodeParamsSerializer(serializers.Serializer):
 class IDataSourceLocalNode(INode):
     type = 'data-source-local-node'
 
+    @staticmethod
     @abstractmethod
-    def get_form_class(self):
+    def get_form_class():
         pass
 
     def get_node_params_serializer_class(self) -> Type[serializers.Serializer]:

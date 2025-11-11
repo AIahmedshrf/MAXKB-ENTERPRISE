@@ -9,6 +9,7 @@
 from .ai_chat_step_node import *
 from .application_node import BaseApplicationNode
 from .condition_node import *
+from .data_source_local_node.impl.base_data_source_local_node import BaseDataSourceLocalNode
 from .direct_reply_node import *
 from .document_extract_node import *
 from .form_node import *
@@ -46,7 +47,8 @@ node_list = [BaseStartStepNode, BaseChatNode, BaseSearchKnowledgeNode, BaseSearc
              BaseVideoUnderstandNode,
              BaseIntentNode, BaseLoopNode, BaseLoopStartStepNode,
              BaseLoopContinueNode,
-             BaseLoopBreakNode, BaseVariableSplittingNode, BaseParameterExtractionNode, BaseVariableAggregationNode]
+             BaseLoopBreakNode, BaseVariableSplittingNode, BaseParameterExtractionNode, BaseVariableAggregationNode,
+             BaseDataSourceLocalNode]
 
 
 def get_node(node_type):

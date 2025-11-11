@@ -81,7 +81,6 @@ export const knowledgeBaseNode = {
   },
 }
 export const dataSourceLocalNode = {
-  id: WorkflowType.DataSourceLocalNode,
   type: WorkflowType.DataSourceLocalNode,
   x: 360,
   y: 2761.3875,

@@ -315,6 +315,14 @@ const delMulTag: (
 ) => Promise<Result<any>> = (knowledge_id, tags, loading) => {
   return put(`${prefix.value}/${knowledge_id}/tags/batch_delete`, tags, null, loading)
 }
+const getKnowledgeWorkflowFormList: (
+  knowledge_id: string,
+  type: 'loacl' | 'tool',
+  id: string,
+  loading?: Ref<boolean>,
+) => Promise<Result<any>> = (knowledge_id: string, type: 'loacl' | 'tool', id: string, loading) => {
+  return get(`${prefix.value}/${knowledge_id}/form_list/${type}/${id}`, null, loading)
+}
 
 export default {
   getKnowledgeList,
@@ -340,4 +348,5 @@ export default {
   delTag,
   delMulTag,
   createWorkflowKnowledge,
+  getKnowledgeWorkflowFormList,
 }

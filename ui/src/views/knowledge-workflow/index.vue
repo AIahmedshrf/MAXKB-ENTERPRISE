@@ -125,11 +125,9 @@
             </div>
           </div>
         </div>
-        <div class="scrollbar-height">
-          <AiChat :knowledge-details="detail" :type="'debug-ai-chat'"></AiChat>
-        </div>
       </div>
     </el-collapse-transition>
+    <DebugVue ref="DebugRef"></DebugVue>
     <!-- 发布历史 -->
     <PublishHistory
       v-if="showHistory"
@@ -153,6 +151,7 @@ import { mapToUrlParams } from '@/utils/application'
 import useStore from '@/stores'
 import { WorkFlowInstance } from '@/workflow/common/validate'
 import { hasPermission } from '@/utils/permission'
+import DebugVue from './component/Debug.vue'
 import { t } from '@/locales'
 import { ComplexPermission } from '@/utils/permission/type'
 import { EditionConst, PermissionConst, RoleConst } from '@/utils/permission/data'
@@ -184,6 +183,7 @@ const permissionPrecise = computed(() => {
 const isDefaultTheme = computed(() => {
   return theme.isDefaultTheme()
 })
+const DebugRef = ref<InstanceType<typeof DebugVue>>()
 
 let interval: any
 const workflowRef = ref()
@@ -393,8 +393,8 @@ const clickShowDebug = () => {
           ...workflow.get_base_node()?.properties.node_data,
           work_flow: getGraphData(),
         }
-
-        showDebug.value = true
+        console.log('sss', DebugRef.value)
+        DebugRef.value?.open(graphData)
       } catch (e: any) {
         console.log(e)
         MsgError(e.toString())
