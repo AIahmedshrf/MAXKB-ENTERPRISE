@@ -11,9 +11,17 @@
     <template #default>
       <el-form-item prop="model_name" :rules="base_form_data_rule.model_name">
         <el-radio-group @change="sourceChange" v-model="base_form_data.data_source">
-          <el-radio :value="node.id" size="large" v-for="node in source_node_list">{{
-            node.properties.stepName
-          }}</el-radio>
+          <el-radio :value="node.id" border size="large" v-for="node in source_node_list">
+            <div style="display: flex; align-items: center">
+              <component
+                :is="iconComponent(`${node.type}-icon`)"
+                class="mr-8"
+                :size="24"
+                :item="node?.properties.node_data"
+              />
+              {{ node.properties.stepName }}
+            </div>
+          </el-radio>
         </el-radio-group>
       </el-form-item>
     </template>
@@ -24,6 +32,7 @@ import { computed, ref } from 'vue'
 import { WorkflowKind, WorkflowMode, WorkflowType } from '@/enums/application'
 import DynamicsForm from '@/components/dynamics-form/index.vue'
 import type { FormField } from '@/components/dynamics-form/type'
+import { iconComponent } from '@/workflow/icons/utils'
 import type { Dict } from '@/api/type/common'
 import type { FormRules } from 'element-plus'
 import { loadSharedApi } from '@/utils/dynamics-api/shared-api'
