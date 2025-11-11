@@ -38,6 +38,10 @@ export enum WorkflowType {
   VariableAggregationNode = 'variable-aggregation-node',
   VideoUnderstandNode = 'video-understand-node',
   ParameterExtractionNode = 'parameter-extraction-node',
+  DataSourceLocalNode = 'data-source-local-node',
+}
+export enum WorkflowKind {
+  DataSource = 'data-source',
 }
 export enum WorkflowMode {
   // 应用工作流

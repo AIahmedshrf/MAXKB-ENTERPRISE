@@ -301,7 +301,7 @@ const publish = () => {
     ?.validate()
     .then(() => {
       const workflow = getGraphData()
-      const workflowInstance = new WorkFlowInstance(workflow)
+      const workflowInstance = new WorkFlowInstance(workflow, WorkflowMode.Knowledge)
       try {
         workflowInstance.is_valid()
       } catch (e: any) {
@@ -384,7 +384,7 @@ const clickShowDebug = () => {
     ?.validate()
     .then(() => {
       const graphData = getGraphData()
-      const workflow = new WorkFlowInstance(graphData)
+      const workflow = new WorkFlowInstance(graphData, WorkflowMode.Knowledge)
       try {
         workflow.is_valid()
         detail.value = {
@@ -396,6 +396,7 @@ const clickShowDebug = () => {
 
         showDebug.value = true
       } catch (e: any) {
+        console.log(e)
         MsgError(e.toString())
       }
     })

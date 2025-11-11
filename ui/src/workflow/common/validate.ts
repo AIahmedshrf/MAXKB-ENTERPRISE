@@ -1,3 +1,4 @@
+import { WorkflowKind } from './../../enums/application'
 import { WorkflowType, WorkflowMode } from '@/enums/application'
 
 import { t } from '@/locales'
@@ -43,7 +44,9 @@ const loop_end_nodes: Array<string> = [
 ]
 const end_nodes_dict = {
   [WorkflowMode.Application]: end_nodes,
+  [WorkflowMode.Knowledge]: end_nodes,
   [WorkflowMode.ApplicationLoop]: loop_end_nodes,
+  [WorkflowMode.KnowledgeLoop]: loop_end_nodes,
 }
 
 export class WorkFlowInstance {
@@ -63,8 +66,10 @@ export class WorkFlowInstance {
    * 校验开始节点
    */
   private is_valid_start_node() {
-    const start_node_list = this.nodes.filter((item) =>
-      [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id),
+    const start_node_list = this.nodes.filter(
+      (item) =>
+        [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id) ||
+        item.properties.kind == WorkflowKind.DataSource,
     )
     if (start_node_list.length == 0) {
       throw t('views.applicationWorkflow.validate.startNodeRequired')
@@ -77,6 +82,10 @@ export class WorkFlowInstance {
    * 校验基本信息节点
    */
   private is_valid_base_node() {
+    console.log(this.workflowModel)
+    if (this.workflowModel == WorkflowMode.Knowledge) {
+      return
+    }
     const start_node_list = this.nodes.filter((item) => item.id === WorkflowType.Base)
     if (start_node_list.length == 0) {
       throw t('views.applicationWorkflow.validate.baseNodeRequired')
@@ -106,8 +115,10 @@ export class WorkFlowInstance {
    * @returns
    */
   get_start_node() {
-    const start_node_list = this.nodes.filter((item) =>
-      [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id),
+    const start_node_list = this.nodes.filter(
+      (item) =>
+        [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id) ||
+        item.properties.kind == WorkflowKind.DataSource,
     )
     return start_node_list[0]
   }
@@ -143,9 +154,26 @@ export class WorkFlowInstance {
 
   private is_valid_work_flow() {
     this.workFlowNodes = []
-    this._is_valid_work_flow()
+    if (this.workflowModel == WorkflowMode.Knowledge) {
+      const start_node_list = this.nodes.filter(
+        (item) =>
+          [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id) ||
+          item.properties.kind == WorkflowKind.DataSource,
+      )
+      start_node_list.forEach((startNode) => {
+        this._is_valid_work_flow(startNode)
+      })
+    } else {
+      this._is_valid_work_flow()
+    }
+
     const notInWorkFlowNodes = this.nodes
-      .filter((node: any) => node.id !== WorkflowType.Start && node.id !== WorkflowType.Base)
+      .filter(
+        (node: any) =>
+          node.id !== WorkflowType.Start &&
+          node.id !== WorkflowType.Base &&
+          node.id !== WorkflowType.KnowledgeBase,
+      )
       .filter((node) => !this.workFlowNodes.includes(node))
     if (notInWorkFlowNodes.length > 0) {
       throw `${t('views.applicationWorkflow.validate.notInWorkFlowNode')}:${notInWorkFlowNodes.map((node) => node.properties.stepName).join('，')}`
@@ -175,7 +203,9 @@ export class WorkFlowInstance {
       if (
         node.type !== WorkflowType.Base &&
         node.type !== WorkflowType.Start &&
-        node.type !== WorkflowType.LoopStartNode
+        node.type !== WorkflowType.LoopStartNode &&
+        node.type !== WorkflowType.KnowledgeBase &&
+        node.properties.kind !== WorkflowKind.DataSource
       ) {
         if (!this.edges.some((edge) => edge.targetNodeId === node.id)) {
           throw `${t('views.applicationWorkflow.validate.notInWorkFlowNode')}:${node.properties.stepName}`

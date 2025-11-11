@@ -8,11 +8,13 @@ from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from application.flow.step_node import get_node
 from common.exception.app_exception import AppApiException
 from knowledge.models import KnowledgeScope, Knowledge, KnowledgeType, KnowledgeWorkflow
 from knowledge.serializers.knowledge import KnowledgeModelSerializer
 from system_manage.models import AuthTargetType
 from system_manage.serializers.user_resource_permission import UserResourcePermissionSerializer
+from tools.models import Tool
 
 
 class KnowledgeWorkflowModelSerializer(serializers.ModelSerializer):
@@ -22,6 +24,20 @@ class KnowledgeWorkflowModelSerializer(serializers.ModelSerializer):
 
 
 class KnowledgeWorkflowSerializer(serializers.Serializer):
+    class Form(serializers.Serializer):
+        type = serializers.CharField(required=True, label=_('type'))
+        id = serializers.CharField(required=True, label=_('type'))
+
+        def get_form_list(self):
+            self.is_valid(raise_exception=True)
+            if self.data.get('type') == 'local':
+                node = get_node(self.data.get('id'))
+                return node.get_form_class()().to_form_list()
+            elif self.data.get('type') == 'tool':
+                tool = QuerySet(Tool).filter(id=self.data.get("id")).first()
+                # todo 调用工具数据源的函数获取表单列表
+            return None
+
     class Create(serializers.Serializer):
         user_id = serializers.UUIDField(required=True, label=_('user id'))
         workspace_id = serializers.CharField(required=True, label=_('workspace id'))

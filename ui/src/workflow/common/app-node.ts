@@ -1,3 +1,4 @@
+import { WorkflowKind } from './../../enums/application'
 import Components from '@/components'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIcons from '@element-plus/icons-vue'
@@ -414,9 +415,11 @@ class AppNodeModel extends HtmlResize.model {
     const { id, x, y, width } = this
     const showNode = this.properties.showNode === undefined ? true : this.properties.showNode
     const anchors: any = []
-
     if (![WorkflowType.Base as string, WorkflowType.KnowledgeBase as string].includes(this.type)) {
-      if (![WorkflowType.Start, WorkflowType.LoopStartNode.toString()].includes(this.type)) {
+      if (
+        ![WorkflowType.Start, WorkflowType.LoopStartNode.toString()].includes(this.type) &&
+        this.properties.kind != WorkflowKind.DataSource
+      ) {
         anchors.push({
           x: x - width / 2 + 10,
           y: showNode ? y : y - 15,

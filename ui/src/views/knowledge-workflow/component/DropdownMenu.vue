@@ -1,5 +1,9 @@
 <template>
-  <div v-show="show" class="workflow-dropdown-menu border border-r-6 white-bg" :style="{ width: activeName === 'base' ? '400px':'640px' }">
+  <div
+    v-show="show"
+    class="workflow-dropdown-menu border border-r-6 white-bg"
+    :style="{ width: activeName === 'base' ? '400px' : '640px' }"
+  >
     <el-tabs v-model="activeName" class="workflow-dropdown-tabs" @tab-change="handleClick">
       <div
         v-show="activeName === 'base'"

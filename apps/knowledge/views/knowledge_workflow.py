@@ -12,8 +12,14 @@ from common.log.log import log
 from common.result import result
 from knowledge.api.knowledge_workflow import KnowledgeWorkflowApi
 from knowledge.serializers.common import get_knowledge_operation_object
-from knowledge.serializers.knowledge import KnowledgeSerializer
 from knowledge.serializers.knowledge_workflow import KnowledgeWorkflowSerializer
+
+
+class KnowledgeWorkflowFormView(APIView):
+    authentication_classes = [TokenAuth]
+
+    def get(self):
+        return result.success(KnowledgeWorkflowSerializer.Form().get_form_list())
 
 
 class KnowledgeWorkflowView(APIView):

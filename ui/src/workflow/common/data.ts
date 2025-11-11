@@ -1,3 +1,4 @@
+import { WorkflowKind } from './../../enums/application'
 import { WorkflowType, WorkflowMode } from '@/enums/application'
 import { t } from '@/locales'
 
@@ -76,6 +77,25 @@ export const knowledgeBaseNode = {
     config: {},
     showNode: true,
     user_input_config: { title: t('chat.userInput') },
+    user_input_field_list: [],
+  },
+}
+export const dataSourceLocalNode = {
+  id: WorkflowType.DataSourceLocalNode,
+  type: WorkflowType.DataSourceLocalNode,
+  x: 360,
+  y: 2761.3875,
+  text: t('views.applicationWorkflow.nodes.dataSourceLocalNode.text', '本地文件'),
+  label: t('views.applicationWorkflow.nodes.dataSourceLocalNode.label', '本地文件'),
+  properties: {
+    kind: WorkflowKind.DataSource,
+    height: 728.375,
+    stepName: t('views.applicationWorkflow.nodes.dataSourceLocalNode.label', '本地文件'),
+    input_field_list: [],
+    node_data: {},
+    config: {},
+    showNode: true,
+    user_input_config: {},
     user_input_field_list: [],
   },
 }
@@ -642,6 +662,10 @@ export const loopBreakNode = {
 
 export const knowledgeMenuNodes = [
   {
+    label: t('views.applicationWorkflow.nodes.classify.dataSource', '数据源'),
+    list: [dataSourceLocalNode],
+  },
+  {
     label: t('views.applicationWorkflow.nodes.classify.aiCapability'),
     list: [
       aiChatNode,
@@ -868,7 +892,6 @@ export const compareList = [
   { value: 'start_with', label: 'startWith' },
   { value: 'end_with', label: 'endWith' },
 ]
-
 export const nodeDict: any = {
   [WorkflowType.AiChat]: aiChatNode,
   [WorkflowType.SearchKnowledge]: searchKnowledgeNode,
@@ -903,6 +926,7 @@ export const nodeDict: any = {
   [WorkflowType.ParameterExtractionNode]: parameterExtractionNode,
   [WorkflowType.VariableAggregationNode]: variableAggregationNode,
   [WorkflowType.KnowledgeBase]: knowledgeBaseNode,
+  [WorkflowType.DataSourceLocalNode]: dataSourceLocalNode,
 }
 
 export function isWorkFlow(type: string | undefined) {
