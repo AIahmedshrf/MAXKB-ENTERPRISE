@@ -65,11 +65,9 @@ export class WorkFlowInstance {
   /**
    * 校验开始节点
    */
-  private is_valid_start_node() {
-    const start_node_list = this.nodes.filter(
-      (item) =>
-        [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id) ||
-        item.properties.kind == WorkflowKind.DataSource,
+  is_valid_start_node() {
+    const start_node_list = this.nodes.filter((item) =>
+      [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id),
     )
     if (start_node_list.length == 0) {
       throw t('views.applicationWorkflow.validate.startNodeRequired')
@@ -81,11 +79,7 @@ export class WorkFlowInstance {
   /**
    * 校验基本信息节点
    */
-  private is_valid_base_node() {
-    console.log(this.workflowModel)
-    if (this.workflowModel == WorkflowMode.Knowledge) {
-      return
-    }
+  is_valid_base_node() {
     const start_node_list = this.nodes.filter((item) => item.id === WorkflowType.Base)
     if (start_node_list.length == 0) {
       throw t('views.applicationWorkflow.validate.baseNodeRequired')
@@ -115,10 +109,8 @@ export class WorkFlowInstance {
    * @returns
    */
   get_start_node() {
-    const start_node_list = this.nodes.filter(
-      (item) =>
-        [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id) ||
-        item.properties.kind == WorkflowKind.DataSource,
+    const start_node_list = this.nodes.filter((item) =>
+      [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id),
     )
     return start_node_list[0]
   }
@@ -140,7 +132,7 @@ export class WorkFlowInstance {
    * 校验工作流
    * @param up_node 上一个节点
    */
-  private _is_valid_work_flow(up_node?: any) {
+  _is_valid_work_flow(up_node?: any) {
     if (!up_node) {
       up_node = this.get_start_node()
     }
@@ -152,28 +144,11 @@ export class WorkFlowInstance {
     }
   }
 
-  private is_valid_work_flow() {
+  is_valid_work_flow() {
     this.workFlowNodes = []
-    if (this.workflowModel == WorkflowMode.Knowledge) {
-      const start_node_list = this.nodes.filter(
-        (item) =>
-          [WorkflowType.Start, WorkflowType.LoopStartNode].includes(item.id) ||
-          item.properties.kind == WorkflowKind.DataSource,
-      )
-      start_node_list.forEach((startNode) => {
-        this._is_valid_work_flow(startNode)
-      })
-    } else {
-      this._is_valid_work_flow()
-    }
-
+    this._is_valid_work_flow()
     const notInWorkFlowNodes = this.nodes
-      .filter(
-        (node: any) =>
-          node.id !== WorkflowType.Start &&
-          node.id !== WorkflowType.Base &&
-          node.id !== WorkflowType.KnowledgeBase,
-      )
+      .filter((node: any) => node.id !== WorkflowType.Start && node.id !== WorkflowType.Base)
       .filter((node) => !this.workFlowNodes.includes(node))
     if (notInWorkFlowNodes.length > 0) {
       throw `${t('views.applicationWorkflow.validate.notInWorkFlowNode')}:${notInWorkFlowNodes.map((node) => node.properties.stepName).join('，')}`
@@ -186,7 +161,7 @@ export class WorkFlowInstance {
    * @param node 节点
    * @returns 节点列表
    */
-  private get_next_nodes(node: any) {
+  get_next_nodes(node: any) {
     const edge_list = this.edges.filter((edge) => edge.sourceNodeId == node.id)
     const node_list = edge_list
       .map((edge) => this.nodes.filter((node) => node.id == edge.targetNodeId))
@@ -198,14 +173,12 @@ export class WorkFlowInstance {
     return node_list
   }
 
-  private is_valid_nodes() {
+  is_valid_nodes() {
     for (const node of this.nodes) {
       if (
         node.type !== WorkflowType.Base &&
         node.type !== WorkflowType.Start &&
-        node.type !== WorkflowType.LoopStartNode &&
-        node.type !== WorkflowType.KnowledgeBase &&
-        node.properties.kind !== WorkflowKind.DataSource
+        node.type !== WorkflowType.LoopStartNode
       ) {
         if (!this.edges.some((edge) => edge.targetNodeId === node.id)) {
           throw `${t('views.applicationWorkflow.validate.notInWorkFlowNode')}:${node.properties.stepName}`
@@ -218,7 +191,7 @@ export class WorkFlowInstance {
    * 校验节点
    * @param node 节点
    */
-  private is_valid_node(node: any) {
+  is_valid_node(node: any) {
     if (node.properties.status && node.properties.status === 500) {
       throw `${node.properties.stepName} ${t('views.applicationWorkflow.validate.nodeUnavailable')}`
     }
@@ -240,6 +213,63 @@ export class WorkFlowInstance {
     }
     if (node.properties.status && node.properties.status !== 200) {
       throw `${node.properties.stepName} ${t('views.applicationWorkflow.validate.nodeUnavailable')}`
+    }
+  }
+}
+
+export class KnowledgeWorkFlowInstance extends WorkFlowInstance {
+  is_valid_start_node() {
+    const start_node_list = this.nodes.filter(
+      (item) => item.properties.kind === WorkflowKind.DataSource,
+    )
+    if (start_node_list.length == 0) {
+      throw t('views.applicationWorkflow.validate.startNodeRequired')
+    }
+  }
+  /**
+   * 校验基本信息节点
+   */
+  is_valid_base_node() {
+    const base_node_list = this.nodes.filter((item) => item.id === WorkflowType.KnowledgeBase)
+    if (base_node_list.length == 0) {
+      throw t('views.applicationWorkflow.validate.baseNodeRequired')
+    } else if (base_node_list.length > 1) {
+      throw t('views.applicationWorkflow.validate.baseNodeOnly')
+    }
+  }
+
+  is_valid_work_flow() {
+    this.workFlowNodes = []
+    const start_node_list = this.nodes.filter(
+      (item) => item.properties.kind === WorkflowKind.DataSource,
+    )
+    start_node_list.forEach((n) => {
+      this._is_valid_work_flow(n)
+    })
+
+    const notInWorkFlowNodes = this.nodes
+      .filter(
+        (node: any) =>
+          node.id !== WorkflowType.KnowledgeBase &&
+          node.properties.kind !== WorkflowKind.DataSource,
+      )
+      .filter((node) => !this.workFlowNodes.includes(node))
+    if (notInWorkFlowNodes.length > 0) {
+      throw `${t('views.applicationWorkflow.validate.notInWorkFlowNode')}:${notInWorkFlowNodes.map((node) => node.properties.stepName).join('，')}`
+    }
+    this.workFlowNodes = []
+  }
+
+  is_valid_nodes() {
+    for (const node of this.nodes) {
+      if (
+        node.type !== WorkflowType.KnowledgeBase &&
+        node.properties.kind !== WorkflowKind.DataSource
+      ) {
+        if (!this.edges.some((edge) => edge.targetNodeId === node.id)) {
+          throw `${t('views.applicationWorkflow.validate.notInWorkFlowNode')}:${node.properties.stepName}`
+        }
+      }
     }
   }
 }

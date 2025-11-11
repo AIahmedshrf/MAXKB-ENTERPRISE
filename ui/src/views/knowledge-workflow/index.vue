@@ -149,7 +149,7 @@ import { MsgSuccess, MsgError, MsgConfirm } from '@/utils/message'
 import { datetimeFormat } from '@/utils/time'
 import { mapToUrlParams } from '@/utils/application'
 import useStore from '@/stores'
-import { WorkFlowInstance } from '@/workflow/common/validate'
+import { KnowledgeWorkFlowInstance } from '@/workflow/common/validate'
 import { hasPermission } from '@/utils/permission'
 import DebugVue from './component/Debug.vue'
 import { t } from '@/locales'
@@ -301,7 +301,7 @@ const publish = () => {
     ?.validate()
     .then(() => {
       const workflow = getGraphData()
-      const workflowInstance = new WorkFlowInstance(workflow, WorkflowMode.Knowledge)
+      const workflowInstance = new KnowledgeWorkFlowInstance(workflow, WorkflowMode.Knowledge)
       try {
         workflowInstance.is_valid()
       } catch (e: any) {
@@ -384,7 +384,7 @@ const clickShowDebug = () => {
     ?.validate()
     .then(() => {
       const graphData = getGraphData()
-      const workflow = new WorkFlowInstance(graphData, WorkflowMode.Knowledge)
+      const workflow = new KnowledgeWorkFlowInstance(graphData, WorkflowMode.Knowledge)
       try {
         workflow.is_valid()
         detail.value = {
