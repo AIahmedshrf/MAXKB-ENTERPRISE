@@ -112,11 +112,85 @@ const DocumentRouter = {
         permission: [
           () => {
             const to: any = get_next_route()
-            if (to.params.type === '4') {
+            if (to.params.folderId == 'shared') {
+              return RoleConst.ADMIN
+            } else if (to.params.folderId == 'resource-management') {
+            } else {
+              return new ComplexPermission(
+                [RoleConst.USER],
+                [
+                  PermissionConst.KNOWLEDGE.getKnowledgeWorkspaceResourcePermission(
+                    to ? to.params.id : '',
+                  ),
+                ],
+                [],
+                'AND',
+              )
+            }
+          },
+          () => {
+            const to: any = get_next_route()
+            if (to.params.folderId == 'shared') {
+              return RoleConst.ADMIN
+            } else if (to.params.folderId == 'resource-management') {
+            } else {
+              return RoleConst.WORKSPACE_MANAGE.getWorkspaceRole()
+            }
+          },
+          () => {
+            const to: any = get_next_route()
+            if (to.params.folderId == 'shared') {
+              return PermissionConst.SHARED_KNOWLEDGE_WORKFLOW_READ
+            } else if (to.params.folderId == 'resource-management') {
+            } else {
+              return PermissionConst.KNOWLEDGE_WORKFLOW_READ.getKnowledgeWorkspaceResourcePermission(
+                to ? to.params.id : '',
+              )
+            }
+          },
+          () => {
+            const to: any = get_next_route()
+            if (to.params.folderId == 'shared') {
+              return RoleConst.ADMIN
+            } else if (to.params.folderId == 'resource-management') {
+            } else {
+              return PermissionConst.KNOWLEDGE_WORKFLOW_READ.getWorkspacePermissionWorkspaceManageRole()
+            }
+          },
+          () => {
+            const to: any = get_next_route()
+            if (to.params.folderId == 'share') {
+              return new ComplexPermission(
+                [RoleConst.EXTENDS_USER.getWorkspaceRole()],
+                [PermissionConst.KNOWLEDGE_WORKFLOW_READ.getWorkspacePermission()],
+                [],
+                'AND',
+              )
+            }
+          },
+          () => {
+            const to: any = get_next_route()
+            if (to.params.folderId == 'share') {
+              return RoleConst.USER.getWorkspaceRole()
+            }
+          },
+          () => {
+            const to: any = get_next_route()
+            if (to.params.folderId == 'resource-management') {
               return RoleConst.ADMIN
             }
           },
-        ],
+          () => {
+            const to: any = get_next_route()
+            if (to.params.folderId == 'resource-management') {
+              return PermissionConst.RESOURCE_KNOWLEDGE_WORKFLOW_READ
+            }
+          },
+        ].map(p => () => {
+          const to: any = get_next_route()
+          if (to.params.type !== '4') {return false}
+          return p()
+        }),
       },
       redirect: (menu: any) => {
         const from = 'workspace'
