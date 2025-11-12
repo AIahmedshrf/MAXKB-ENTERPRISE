@@ -56,7 +56,8 @@ const share = {
   tag_edit: () => hasPermission([RoleConst.ADMIN, PermissionConst.SHARED_KNOWLEDGE_TAG_EDIT], 'OR'),
   tag_delete: () =>
     hasPermission([RoleConst.ADMIN, PermissionConst.SHARED_KNOWLEDGE_TAG_DELETE], 'OR'),
-
+  debug: () =>
+    hasPermission([RoleConst.ADMIN, PermissionConst.SHARED_KNOWLEDGE_WORKFLOW_READ], 'OR'),
   chat_user_edit: () => false,
 
   auth: () => false,
@@ -67,6 +68,6 @@ const share = {
   folderAuth: () => false,
   folderDelete: () => false,
   hit_test: () => false,
-  debug: (source_id: string) => true,
+  
 }
 export default share
