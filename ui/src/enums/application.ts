@@ -39,6 +39,7 @@ export enum WorkflowType {
   VideoUnderstandNode = 'video-understand-node',
   ParameterExtractionNode = 'parameter-extraction-node',
   DataSourceLocalNode = 'data-source-local-node',
+  DataSourceWebNode = 'data-source-web-node',
 }
 export enum WorkflowKind {
   DataSource = 'data-source',

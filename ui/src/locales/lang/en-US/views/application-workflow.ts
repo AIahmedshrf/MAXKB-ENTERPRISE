@@ -79,6 +79,12 @@ export default {
     loopNodeBreakNodeRequired: 'Wireless loop must have a Break node',
   },
   nodes: {
+    dataSourceWebNode: {
+      label: 'Web Site',
+      text: 'Web Site',
+      display: 'No data available',
+      field_label: 'Document list',
+    },
     classify: {
       aiCapability: 'AI capability',
       businessLogic: 'Business logic',

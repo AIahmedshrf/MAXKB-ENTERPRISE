@@ -98,6 +98,31 @@ export const dataSourceLocalNode = {
     user_input_field_list: [],
   },
 }
+
+export const dataSourceWebNode = {
+  id: WorkflowType.DataSourceWebNode,
+  type: WorkflowType.DataSourceWebNode,
+  x: 360,
+  y: 2761.3875,
+  text: t('views.applicationWorkflow.nodes.dataSourceWebNode.text', 'Web站点'),
+  label: t('views.applicationWorkflow.nodes.dataSourceWebNode.label', 'Web站点'),
+  properties: {
+    kind: WorkflowKind.DataSource,
+    height: 180,
+    stepName: t('views.applicationWorkflow.nodes.dataSourceWebNode.label', 'Web站点'),
+    config: {
+      fields: [
+        {
+          label: t('views.applicationWorkflow.nodes.dataSourceWebNode.field_label'),
+          value: 'document_list',
+        },
+      ],
+    },
+  },
+
+}
+
+
 /**
  * 说明
  * type 与 nodes 文件对应
@@ -662,7 +687,7 @@ export const loopBreakNode = {
 export const knowledgeMenuNodes = [
   {
     label: t('views.applicationWorkflow.nodes.classify.dataSource', '数据源'),
-    list: [dataSourceLocalNode],
+    list: [dataSourceLocalNode, dataSourceWebNode],
   },
   {
     label: t('views.applicationWorkflow.nodes.classify.aiCapability'),
@@ -926,6 +951,7 @@ export const nodeDict: any = {
   [WorkflowType.VariableAggregationNode]: variableAggregationNode,
   [WorkflowType.KnowledgeBase]: knowledgeBaseNode,
   [WorkflowType.DataSourceLocalNode]: dataSourceLocalNode,
+  [WorkflowType.DataSourceWebNode]: dataSourceWebNode,
 }
 
 export function isWorkFlow(type: string | undefined) {

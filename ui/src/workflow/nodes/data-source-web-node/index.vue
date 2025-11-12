@@ -2,31 +2,7 @@
   <NodeContainer :nodeModel="nodeModel">
     <h5 class="title-decoration-1 mb-8">{{ $t('views.applicationWorkflow.nodeSetting') }}</h5>
     <el-card shadow="never" class="card-never">
-      <el-form
-        @submit.prevent
-        :model="form_data"
-        label-position="top"
-        require-asterisk-position="right"
-        label-width="auto"
-      >
-        <el-form-item
-          :label="$t('views.problem.relateParagraph.selectDocument')"
-          :rules="{
-            type: 'array',
-            required: true,
-            message: $t('views.chatLog.documentPlaceholder'),
-            trigger: 'change',
-          }"
-        >
-          <NodeCascader
-            ref="nodeCascaderRef"
-            :nodeModel="nodeModel"
-            class="w-full"
-            :placeholder="$t('views.chatLog.documentPlaceholder')"
-            v-model="form_data.document_list"
-          />
-        </el-form-item>
-      </el-form>
+      <h4>{{ $t('views.applicationWorkflow.nodes.dataSourceWebNode.display') }}</h4>
     </el-card>
   </NodeContainer>
 </template>

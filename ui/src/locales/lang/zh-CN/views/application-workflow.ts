@@ -81,6 +81,12 @@ export default {
     loopNodeBreakNodeRequired: '无限循环 必须存在 Break 节点',
   },
   nodes: {
+    dataSourceWebNode: {
+      label: 'Web站点',
+      text: 'Web站点',
+      display: '暂无数据',
+      field_label: '文档列表',
+    },
     classify: {
       aiCapability: 'AI能力',
       businessLogic: '业务逻辑',

@@ -80,6 +80,12 @@ export default {
     loopNodeBreakNodeRequired: '無限循環必須存在Break節點',
   },
   nodes: {
+    dataSourceWebNode: {
+      label: 'Web網站',
+      text: 'Web網站',
+      display: '暫無資料',
+      field_label: '文件列表',
+    },
     classify: {
       aiCapability: 'AI能力',
       businessLogic: '業務邏輯',
