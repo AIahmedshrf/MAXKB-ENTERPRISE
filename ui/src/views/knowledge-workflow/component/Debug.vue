@@ -1,7 +1,8 @@
 <template>
   <el-drawer
     v-model="drawer"
-    title="I am the title"
+    title="调试"
+    size="500"
     direction="rtl"
     destroy-on-close
     :before-close="close"
@@ -20,7 +21,6 @@ const close = () => {
   drawer.value = false
 }
 const open = (workflow: any) => {
-  console.log('ok')
   drawer.value = true
   _workflow.value = workflow
 }

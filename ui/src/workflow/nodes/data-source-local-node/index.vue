@@ -27,7 +27,7 @@
           }"
         >
           <el-select
-            v-model="form_data.file_format"
+            v-model="form_data.file_type_list"
             :placeholder="
               $t(
                 'views.applicationWorkflow.nodes.dataSourceLocalNode.fileFormat.placeholder',
@@ -42,10 +42,10 @@
               <span>{{ label }} </span>
             </template>
             <el-option
-              v-for="item in file_format_list"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in file_type_list_options"
+              :key="item"
+              :label="item"
+              :value="item"
             />
           </el-select>
         </el-form-item>
@@ -66,7 +66,7 @@
             trigger: 'change',
           }"
         >
-          <el-slider v-model="form_data.max_file_number" show-input />
+          <el-slider v-model="form_data.file_size_limit" show-input />
         </el-form-item>
         <el-form-item
           :label="
@@ -85,7 +85,7 @@
             trigger: 'change',
           }"
         >
-          <el-slider v-model="form_data.file_max_size" show-input />
+          <el-slider v-model="form_data.file_count_limit" show-input />
         </el-form-item>
       </el-form>
     </el-card>
@@ -98,20 +98,12 @@ import { computed } from 'vue'
 import { set } from 'lodash'
 
 const props = defineProps<{ nodeModel: any }>()
-const file_format_list = [
-  { label: 'TXT', value: '.txt' },
-  { label: 'DOCX', value: '.docx' },
-  { label: 'PDF', value: '.pdf' },
-  { label: 'HTML', value: '.html' },
-  { label: 'XLS', value: '.xls' },
-  { label: 'XLSX', value: '.xlsx' },
-  { label: 'ZIP', value: '.zip' },
-  { label: 'CSV', value: '.csv' },
-]
+
+const file_type_list_options = ['TXT', 'DOCX', 'PDF', 'HTML', 'XLS', 'XLSX', 'ZIP', 'CSV']
 const form = {
-  file_format: [],
-  max_file_number: 50,
-  file_max_size: 100,
+  file_type_list: [],
+  file_size_limit: 50,
+  file_count_limit: 100,
 }
 
 const form_data = computed({

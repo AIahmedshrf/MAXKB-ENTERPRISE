@@ -21,8 +21,18 @@ class BaseDataSourceLocalNode(IDataSourceLocalNode):
         pass
 
     @staticmethod
-    def get_form_class():
-        return BaseDataSourceLocalNodeForm
+    def get_form_list(node):
+        node_data = node.get('properties').get('node_data')
+        return [{
+            'field': 'file_list',
+            'input_type': 'LocalFileUpload',
+            'attrs': {
+                'file_count_limit': node_data.get('file_count_limit') or 10,
+                'file_size_limit': node_data.get('file_size_limit') or 100,
+                'file_type_list': node_data.get('file_type_list'),
+            },
+            'label': '',
+        }]
 
     def execute(self, file_format, max_file_number, file_max_size, **kwargs) -> NodeResult:
         pass

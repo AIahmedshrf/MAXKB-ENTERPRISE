@@ -23,6 +23,16 @@ import type { Dict } from '@/api/type/common'
 
 const damo_data: Array<FormField> = [
   {
+    field: 'aa',
+    input_type: 'LocalFileUpload',
+    attrs: {
+      file_count_limit: 10,
+      file_size_limit: 10,
+      file_type_list: ['TXT'],
+    },
+    label: '',
+  },
+  {
     field: 'name',
     input_type: 'PasswordInput',
     label: {

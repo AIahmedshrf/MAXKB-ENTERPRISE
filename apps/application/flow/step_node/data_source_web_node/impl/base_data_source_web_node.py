@@ -22,8 +22,8 @@ class BaseDataSourceWebNode(IDataSourceWebNode):
         pass
 
     @staticmethod
-    def get_form_class():
-        return BaseDataSourceWebNodeForm
+    def get_form_list(node):
+        return BaseDataSourceWebNodeForm().to_form_list()
 
     def execute(self, **kwargs) -> NodeResult:
         pass

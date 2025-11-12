@@ -71,8 +71,8 @@ const sourceChange = (node_id: string) => {
   const n = source_node_list.value.find((n: any) => n.id == node_id)
   node_id = n ? ([WorkflowType.DataSourceLocalNode,WorkflowType.DataSourceWebNode].includes(n.type) ? n.type : node_id) : node_id
   loadSharedApi({ type: 'knowledge', systemType: apiType.value })
-    .getKnowledgeWorkflowFormList(id, 'local', node_id)
-    .then((ok) => {
+    .getKnowledgeWorkflowFormList(id, 'local', node_id, n)
+    .then((ok: any) => {
       dynamicsFormRef.value?.render(ok.data)
     })
 }

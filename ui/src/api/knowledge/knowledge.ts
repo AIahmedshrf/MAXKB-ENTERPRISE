@@ -319,9 +319,16 @@ const getKnowledgeWorkflowFormList: (
   knowledge_id: string,
   type: 'loacl' | 'tool',
   id: string,
+  node: any,
   loading?: Ref<boolean>,
-) => Promise<Result<any>> = (knowledge_id: string, type: 'loacl' | 'tool', id: string, loading) => {
-  return get(`${prefix.value}/${knowledge_id}/form_list/${type}/${id}`, null, loading)
+) => Promise<Result<any>> = (
+  knowledge_id: string,
+  type: 'loacl' | 'tool',
+  id: string,
+  node,
+  loading,
+) => {
+  return post(`${prefix.value}/${knowledge_id}/form_list/${type}/${id}`, { node }, {}, loading)
 }
 
 export default {

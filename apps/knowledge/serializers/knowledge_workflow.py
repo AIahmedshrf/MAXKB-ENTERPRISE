@@ -27,12 +27,13 @@ class KnowledgeWorkflowSerializer(serializers.Serializer):
     class Form(serializers.Serializer):
         type = serializers.CharField(required=True, label=_('type'))
         id = serializers.CharField(required=True, label=_('type'))
+        node = serializers.DictField(required=True, label="")
 
         def get_form_list(self):
             self.is_valid(raise_exception=True)
             if self.data.get('type') == 'local':
                 node = get_node(self.data.get('id'))
-                return node.get_form_class()().to_form_list()
+                return node.get_form_list(self.data.get("node"))
             elif self.data.get('type') == 'tool':
                 tool = QuerySet(Tool).filter(id=self.data.get("id")).first()
                 # todo 调用工具数据源的函数获取表单列表

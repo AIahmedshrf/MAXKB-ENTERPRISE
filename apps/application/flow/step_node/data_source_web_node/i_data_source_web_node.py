@@ -18,7 +18,7 @@ class IDataSourceWebNode(INode):
 
     @staticmethod
     @abstractmethod
-    def get_form_class():
+    def get_form_list(node):
         pass
 
     def _run(self):
