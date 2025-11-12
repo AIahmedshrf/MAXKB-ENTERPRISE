@@ -32,7 +32,7 @@ class KnowledgeWorkflowSerializer(serializers.Serializer):
             self.is_valid(raise_exception=True)
             if self.data.get('type') == 'local':
                 node = get_node(self.data.get('id'))
-                return node.get_form_class().to_form_list()
+                return node.get_form_class()().to_form_list()
             elif self.data.get('type') == 'tool':
                 tool = QuerySet(Tool).filter(id=self.data.get("id")).first()
                 # todo 调用工具数据源的函数获取表单列表

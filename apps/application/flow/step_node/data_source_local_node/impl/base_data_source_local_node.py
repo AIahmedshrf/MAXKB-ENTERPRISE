@@ -22,7 +22,7 @@ class BaseDataSourceLocalNode(IDataSourceLocalNode):
 
     @staticmethod
     def get_form_class():
-        return BaseDataSourceLocalNodeForm()
+        return BaseDataSourceLocalNodeForm
 
     def execute(self, file_format, max_file_number, file_max_size, **kwargs) -> NodeResult:
         pass
