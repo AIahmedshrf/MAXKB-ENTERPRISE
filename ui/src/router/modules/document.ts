@@ -194,8 +194,8 @@ const DocumentRouter = {
       },
       redirect: (menu: any) => {
         const from = 'workspace'
-        console.log(`/knowledge/${from}/${menu.params.id}/workflow`)
-        return `/knowledge/${from}/${menu.params.id}/workflow`
+        console.log(`/knowledge/${from}/${menu.params.id}/${menu.params.folderId}/workflow`)
+        return `/knowledge/${from}/${menu.params.id}/${menu.params.folderId}/workflow`
       },
       component: () => import('@/views/knowledge/index.vue'),
     },

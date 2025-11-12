@@ -30,7 +30,7 @@
           <AppIcon iconName="app-add-outlined" class="mr-4" />
           {{ $t('views.knowledgeWorkflow.setting.addComponent') }}
         </el-button>
-        <el-button @click="clickShowDebug" :disabled="showDebug" v-if="permissionPrecise.debug(id)">
+        <el-button @click="clickShowDebug" :disabled="showDebug">
           <AppIcon iconName="app-debug-outlined" class="mr-4"></AppIcon>
           {{ $t('views.knowledgeWorkflow.setting.debug') }}
         </el-button>
@@ -166,7 +166,7 @@ const { theme } = useStore()
 const router = useRouter()
 const route = useRoute()
 const {
-  params: { id, from },
+  params: { id, from, folderId },
 } = route as any
 const apiType = computed(() => {
   if (route.path.includes('resource-management')) {
@@ -505,7 +505,7 @@ const get_resource_management_route = () => {
 }
 
 const get_route = () => {
-  return `/knowledge/${id}/${from}/document`
+  return `/knowledge/${id}/${folderId}/4/document`
 }
 
 /**
