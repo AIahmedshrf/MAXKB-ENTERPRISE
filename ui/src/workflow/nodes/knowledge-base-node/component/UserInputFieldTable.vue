@@ -210,11 +210,16 @@ function onDragHandle() {
 }
 
 onMounted(() => {
-  set(props.nodeModel.properties, 'user_input_field_list', inputFieldList)
-  if (props.nodeModel.properties.config) {
-    inputFieldConfig.value = props.nodeModel.properties.user_input_config
+  if (props.nodeModel.properties.user_input_field_list) {
+    inputFieldList.value = cloneDeep(props.nodeModel.properties.user_input_field_list)
   }
-  set(props.nodeModel.properties, 'user_input_config', inputFieldConfig)
+
+  const fields = inputFieldList.value.map((item) => ({
+    label: item.label.label,
+    value: item.field,
+  }))
+  set(props.nodeModel.properties.config, 'fields', fields)
+
   onDragHandle()
 })
 </script>

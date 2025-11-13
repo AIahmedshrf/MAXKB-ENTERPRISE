@@ -1,87 +1,53 @@
 <template>
-  <DynamicsForm
-    v-loading="loading"
-    v-model="form_data"
-    :render_data="model_form_field"
-    :model="form_data"
-    ref="dynamicsFormRef"
-    label-position="top"
-    require-asterisk-position="right"
-  >
-    <template #default>
-      <el-form-item prop="model_name" :rules="base_form_data_rule.model_name">
-        <el-radio-group @change="sourceChange" v-model="base_form_data.data_source">
-          <el-radio :value="node.id" border size="large" v-for="node in source_node_list">
-            <div style="display: flex; align-items: center">
-              <component
-                :is="iconComponent(`${node.type}-icon`)"
-                class="mr-8"
-                :size="24"
-                :item="node?.properties.node_data"
-              />
-              {{ node.properties.stepName }}
-            </div>
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
-    </template>
-  </DynamicsForm>
+  <div style="height: 100%; width: 100%">
+    <div style="height: calc(100% - 57px); overflow-y: auto; width: 100%">
+      <component ref="ActionRef" :is="ak[active]" :workflow="workflow"></component>
+    </div>
+    <div class="el-drawer__footer">
+      <el-button>Cancel</el-button>
+      <el-button v-if="base_form_list.length > 0 && active == 'knowledge_base'" @click="up"
+        >上一步</el-button
+      >
+      <el-button v-if="base_form_list.length > 0 && active == 'data_source'" @click="next"
+        >下一步</el-button
+      >
+      <el-button v-if="base_form_list.length > 0 ? active == 'knowledge_base' : true" type="primary"
+        >Upload
+      </el-button>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { WorkflowKind, WorkflowMode, WorkflowType } from '@/enums/application'
-import DynamicsForm from '@/components/dynamics-form/index.vue'
-import type { FormField } from '@/components/dynamics-form/type'
-import { iconComponent } from '@/workflow/icons/utils'
-import type { Dict } from '@/api/type/common'
-import type { FormRules } from 'element-plus'
-import { loadSharedApi } from '@/utils/dynamics-api/shared-api'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-const apiType = computed(() => {
-  if (route.path.includes('resource-management')) {
-    return 'systemManage'
-  } else {
-    return 'workspace'
-  }
-})
-const model_form_field = ref<Array<FormField>>([])
+import DataSource from '@/views/knowledge-workflow/component/action/DataSource.vue'
+import KnowledgeBase from '@/views/knowledge-workflow/component/action/KnowledgeBase.vue'
+import { WorkflowType } from '@/enums/application'
+const ak = {
+  data_source: DataSource,
+  knowledge_base: KnowledgeBase,
+}
+const ActionRef = ref()
+const form_data = ref<any>()
+const active = ref<'data_source' | 'knowledge_base'>('data_source')
 const props = defineProps<{
   workflow: any
 }>()
-const loading = ref<boolean>(false)
-const dynamicsFormRef = ref<InstanceType<typeof DynamicsForm>>()
-const base_form_data = ref<{ data_source: string }>({ data_source: '' })
-const dynamics_form_data = ref<Dict<any>>({})
-const form_data = computed({
-  get: () => {
-    return { ...dynamics_form_data.value, ...base_form_data.value }
-  },
-  set: (event: any) => {
-    dynamics_form_data.value = event
-  },
+const base_form_list = computed(() => {
+  const kBase = props.workflow?.nodes?.find((n: any) => n.type === WorkflowType.KnowledgeBase)
+  if (kBase) {
+    return kBase.properties.user_input_field_list
+  }
+  return []
 })
-const source_node_list = computed(() => {
-  return props.workflow?.nodes?.filter((n: any) => n.properties.kind === WorkflowKind.DataSource)
-})
-const {
-  params: { id, from },
-} = route as any
-const sourceChange = (node_id: string) => {
-  const n = source_node_list.value.find((n: any) => n.id == node_id)
-  node_id = n ? ([WorkflowType.DataSourceLocalNode,WorkflowType.DataSourceWebNode].includes(n.type) ? n.type : node_id) : node_id
-  loadSharedApi({ type: 'knowledge', systemType: apiType.value })
-    .getKnowledgeWorkflowFormList(id, 'local', node_id, n)
-    .then((ok: any) => {
-      dynamicsFormRef.value?.render(ok.data)
-    })
+const next = () => {
+  ActionRef.value.validate().then(() => {
+    active.value = 'knowledge_base'
+  })
 }
-const base_form_data_rule = ref<FormRules>({
-  data_source: {
-    required: true,
-    trigger: 'blur',
-    message: '数据源必选',
-  },
-})
+const up = () => {
+  ActionRef.value.validate().then(() => {
+    active.value = 'data_source'
+  })
+}
 </script>
 <style lang="scss" scoped></style>
